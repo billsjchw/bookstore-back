@@ -12,6 +12,11 @@ public class BookDaoImpl implements BookDao {
     private @Autowired BookRepository bookRepository;
 
     @Override
+    public boolean existsByISBN(String isbn) {
+        return bookRepository.existsById(isbn);
+    }
+
+    @Override
     public Book findByISBN(String isbn) {
         return bookRepository.findById(isbn).orElse(null);
     }

@@ -10,6 +10,13 @@ public class Cart {
     private Long id;
     private List<CartItem> items = new ArrayList<>();
 
+    public Cart() {}
+
+    public Cart(Cart cart) {
+        id = cart.id;
+        items = cart.items;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
