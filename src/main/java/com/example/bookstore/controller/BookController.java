@@ -11,23 +11,23 @@ import java.util.List;
 public class BookController {
     private @Autowired BookService bookService;
 
-    @GetMapping(value = "/book/get-one")
-    public Book getOne(@RequestParam(name = "isbn") String isbn) {
-        return bookService.findByISBN(isbn);
+    @GetMapping(value = "/book/find")
+    public Book find(@RequestParam(name = "isbn") String isbn) {
+        return bookService.find(isbn);
     }
 
-    @GetMapping(value = "/book/get-all")
-    public List<Book> getAll() {
+    @GetMapping(value = "/book/find-all")
+    public List<Book> findAll() {
         return bookService.findAll();
     }
 
-    @PutMapping(value = "/book/put")
-    public void put(@RequestBody Book book) {
+    @PutMapping(value = "/book/save")
+    public void save(@RequestBody Book book) {
         bookService.save(book);
     }
 
     @DeleteMapping(value = "/book/delete")
     public void delete(@RequestParam(name = "isbn") String isbn) {
-        bookService.deleteByISBN(isbn);
+        bookService.delete(isbn);
     }
 }

@@ -5,8 +5,8 @@ import com.example.bookstore.entity.Book;
 import java.util.List;
 
 public interface BookService {
-    Book findByISBN(String isbn);
+    Book find(String isbn);
     List<Book> findAll();
     void save(Book book);
-    void deleteByISBN(String isbn);
+    void delete(String isbn);
 }

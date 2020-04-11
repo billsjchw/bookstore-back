@@ -14,7 +14,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Book findByISBN(String isbn) {
+    public Book find(String isbn) {
         return bookDao.findByISBN(isbn);
     }
 
@@ -31,8 +31,8 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    @Transactional
-    public void deleteByISBN(String isbn) {
+    @Transactional(rollbackFor = Exception.class)
+    public void delete(String isbn) {
         bookDao.deleteByISBN(isbn);
     }
 }
