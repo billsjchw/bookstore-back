@@ -3,4 +3,8 @@ package com.example.bookstore.repository;
 import com.example.bookstore.entity.Cover;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-public interface CoverRepository extends MongoRepository<Cover, String> {}
+import java.util.List;
+
+public interface CoverRepository extends MongoRepository<Cover, String> {
+    List<Cover> findAllByOrderByIsbn();
+}

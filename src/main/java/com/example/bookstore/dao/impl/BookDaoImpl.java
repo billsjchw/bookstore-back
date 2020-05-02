@@ -8,7 +8,10 @@ import com.example.bookstore.repository.BookRepository;
 import com.example.bookstore.repository.CoverRepository;
 import com.example.bookstore.repository.IntroductionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.querydsl.QSort;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public class BookDaoImpl implements BookDao {
@@ -19,6 +22,19 @@ public class BookDaoImpl implements BookDao {
     @Override
     public boolean existsByIsbn(String isbn) {
         return bookRepo.existsById(isbn);
+    }
+
+    @Override
+    public List<Book> findAll() {
+        List<Book> books = bookRepo.findAllByOrderByIsbnAsc();
+        List<Cover> covers = coverRepo.findAllByOrderByIsbn();
+        List<Introduction> introductions = introRepo.findAllByOrderByIsbn();
+        int size = books.size();
+        for (int i = 0; i < size; ++i) {
+            books.get(i).setCover(covers.get(i).getData());
+            books.get(i).setIntroduction(introductions.get(i).getData());
+        }
+        return books;
     }
 
     @Override

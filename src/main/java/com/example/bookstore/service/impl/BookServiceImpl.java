@@ -11,10 +11,18 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class BookServiceImpl implements BookService {
     @Autowired BookDao bookDao;
+
+    @Override
+    public Message findAllBooks() {
+        List<Book> books = bookDao.findAll();
+        return new Message("SUCCESS", books);
+    }
 
     @Override
     public Message addBook(Book book) {

@@ -4,10 +4,12 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-@Document("covers")
+@Document(collection = "covers")
 public class Cover {
     private String isbn;
     private String data;
+
+    public Cover() {}
 
     public Cover(Book book) {
         this.isbn = book.getIsbn();

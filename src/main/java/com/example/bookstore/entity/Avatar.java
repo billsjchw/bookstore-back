@@ -4,10 +4,12 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-@Document("avatars")
+@Document(collection = "avatars")
 public class Avatar {
     private String username;
     private String data;
+
+    public Avatar() {}
 
     public Avatar(String username, String data) {
         this.username = username;
