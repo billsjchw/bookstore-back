@@ -1,7 +1,7 @@
 package com.example.bookstore.entity;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.sql.Date;
 
 @Entity
 @Table(name = "books")
@@ -9,72 +9,102 @@ public class Book {
     private String isbn;
     private String title;
     private String author;
-    private int price;
+    private String lang;
     private String press;
     private Date date;
-    private String lang;
     private String intro;
     private String cover;
-    private int stock;
+    private Integer price;
+    private Integer stock;
 
     @Id
     @Column(name = "isbn")
-    public String getISBN() { return isbn; }
+    public String getIsbn() {
+        return isbn;
+    }
 
-    public void setISBN(String isbn) { this.isbn = isbn; }
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
+    }
 
-    @Basic
-    @Column(name = "title", nullable = false)
-    public String getTitle() { return title; }
+    @Column(name = "title")
+    public String getTitle() {
+        return title;
+    }
 
-    public void setTitle(String title) { this.title = title; }
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-    @Basic
-    @Column(name = "author", nullable = false)
-    public String getAuthor() { return author; }
+    @Column(name = "author")
+    public String getAuthor() {
+        return author;
+    }
 
-    public void setAuthor(String author) { this.author = author; }
+    public void setAuthor(String author) {
+        this.author = author;
+    }
 
-    @Basic
-    @Column(name = "price", nullable = false)
-    public int getPrice() { return price; }
+    @Column(name = "lang")
+    public String getLang() {
+        return lang;
+    }
 
-    public void setPrice(int price) { this.price = price; }
+    public void setLang(String lang) {
+        this.lang = lang;
+    }
 
-    @Basic
-    @Column(name = "press", nullable = false)
-    public String getPress() { return press; }
+    @Column(name = "press")
+    public String getPress() {
+        return press;
+    }
 
-    public void setPress(String press) { this.press = press; }
+    public void setPress(String press) {
+        this.press = press;
+    }
 
-    @Basic
-    @Temporal(TemporalType.DATE)
-    @Column(name = "date", nullable = false)
-    public Date getDate() { return date; }
+    @Column(name = "date")
+    public Date getDate() {
+        return date;
+    }
 
-    public void setDate(Date date) { this.date = date; }
+    public void setDate(Date date) {
+        this.date = date;
+    }
 
-    @Basic
-    @Column(name = "lang", nullable = false)
-    public String getLang() { return lang; }
+    @Transient
+    public String getIntroduction() {
+        return intro;
+    }
 
-    public void setLang(String lang) { this.lang = lang; }
+    public void setIntroduction(String intro) {
+        this.intro = intro;
+    }
 
-    @Basic
-    @Column(name = "intro", nullable = false)
-    public String getIntro() { return intro; }
+    @Transient
+    public String getCover() {
+        return cover;
+    }
 
-    public void setIntro(String intro) { this.intro = intro; }
+    public void setCover(String cover) {
+        this.cover = cover;
+    }
 
-    @Basic
-    @Column(name = "cover", nullable = false)
-    public String getCover() { return cover; }
+    @Column(name = "price")
+    public Integer getPrice() {
+        return price;
+    }
 
-    public void setCover(String cover) { this.cover = cover; }
+    public void setPrice(Integer price) {
+        this.price = price;
+    }
 
-    @Basic
-    @Column(name = "stock", nullable = false)
-    public int getStock() { return stock; }
+    @Column(name = "stock")
+    public Integer getStock() {
+        return stock;
+    }
 
-    public void setStock(int stock) { this.stock = stock; }
+    public void setStock(Integer stock) {
+        this.stock = stock;
+    }
 }

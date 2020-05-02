@@ -1,38 +1,53 @@
 package com.example.bookstore.entity;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.sql.Timestamp;
+import java.util.List;
 
 @Entity
 @Table(name = "orders")
 public class Order {
-    Long id;
-    Cart cart;
-    Date time;
-
-    public Order() {}
-
-    public Order(Cart cart) {
-        this.cart = cart;
-        time = new Date();
-    }
+    private Long id;
+    private Boolean placed;
+    private Timestamp time;
+    private List<Item> items;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Long getId() { return id; };
+    @Column(name = "id")
+    public Long getId() {
+        return id;
+    }
 
-    public void setId(Long id) { this.id = id; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "cart", referencedColumnName = "id")
-    public Cart getCart() { return cart; }
+    @Column(name = "placed")
+    public Boolean getPlaced() {
+        return placed;
+    }
 
-    public void setCart(Cart cart) { this.cart = cart; }
+    public void setPlaced(Boolean placed) {
+        this.placed = placed;
+    }
 
-    @Basic
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "time")
-    public Date getTime() { return time; }
+    public Timestamp getTime() {
+        return time;
+    }
 
-    public void setTime(Date time) { this.time = time; }
+    public void setTime(Timestamp time) {
+        this.time = time;
+    }
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    @JoinColumn(name = "order", referencedColumnName = "id")
+    public List<Item> getItems() {
+        return items;
+    }
+
+    public void setItems(List<Item> items) {
+        this.items = items;
+    }
 }
