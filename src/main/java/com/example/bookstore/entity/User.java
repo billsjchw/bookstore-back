@@ -1,22 +1,22 @@
 package com.example.bookstore.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
-@Table(name = "users")
+@Table(name = "`users`")
 public class User {
-    String username;
-    String password;
-    String email;
-    String avatar;
-    Cart cart;
-    boolean banned;
+    private String username;
+    private String password;
+    private String email;
+    private String avatar;
+    private Boolean banned;
+    private Boolean admin;
+    private Order cart;
+    private Set<Order> history;
 
     @Id
-    @Column(name = "username")
+    @Column(name = "`username`")
     public String getUsername() {
         return username;
     }
@@ -25,20 +25,16 @@ public class User {
         this.username = username;
     }
 
-    @JsonIgnore
-    @Basic
-    @Column(name = "password", nullable = false)
+    @Column(name = "`password`")
     public String getPassword() {
         return password;
     }
 
-    @JsonProperty
     public void setPassword(String password) {
         this.password = password;
     }
 
-    @Basic
-    @Column(name = "email", nullable = false)
+    @Column(name = "`email`")
     public String getEmail() {
         return email;
     }
@@ -47,31 +43,58 @@ public class User {
         this.email = email;
     }
 
-    @Basic
-    @Column(name = "avatar", nullable = false)
-    public String getAvatar() { return avatar; }
-
-    public void setAvatar(String avatar) { this.avatar = avatar; }
-
-    @JsonIgnore
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "cart", referencedColumnName = "id")
-    public Cart getCart() {
-        return cart;
+    @Transient
+    public String getAvatar() {
+        return avatar;
     }
 
-    @JsonIgnore
-    public void setCart(Cart cart) {
-        this.cart = cart;
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
-    @Basic
-    @Column(name = "banned", nullable = false)
-    public boolean getBanned() {
+    @Column(name = "`banned`")
+    public Boolean getBanned() {
         return banned;
     }
 
-    public void setBanned(boolean banned) {
+    public void setBanned(Boolean banned) {
         this.banned = banned;
+    }
+
+    @Column(name = "`admin`")
+    public Boolean getAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(Boolean admin) {
+        this.admin = admin;
+    }
+
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    @JoinColumn(name = "`cart`", referencedColumnName = "`id`")
+    public Order getCart() {
+        return cart;
+    }
+
+    public void setCart(Order cart) {
+        this.cart = cart;
+    }
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    @JoinTable(
+            name = "`histories`",
+            joinColumns = {@JoinColumn(name = "`user`", referencedColumnName = "`username`")},
+            inverseJoinColumns = {@JoinColumn(name = "`order`", referencedColumnName = "`id`", unique = true)}
+    )
+    public Set<Order> getHistory() {
+        return history;
+    }
+
+    public void setHistory(Set<Order> history) {
+        this.history = history;
+    }
+
+    public void complete(Avatar avatar) {
+        this.avatar = avatar.getData();
     }
 }
