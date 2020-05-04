@@ -3,15 +3,23 @@ package com.example.bookstore.entity;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "items")
+@Table(name = "`items`")
 @IdClass(ItemId.class)
 public class Item {
     Long order;
     Book book;
     Integer num;
 
+    public Item() {}
+
+    public Item(Long order, Book book, Integer num) {
+        this.order = order;
+        this.book = book;
+        this.num = num;
+    }
+
     @Id
-    @Column(name = "order")
+    @Column(name = "`order`")
     public Long getOrder() {
         return order;
     }
@@ -22,7 +30,7 @@ public class Item {
 
     @Id
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
-    @JoinColumn(name = "book", referencedColumnName = "isbn")
+    @JoinColumn(name = "`book`", referencedColumnName = "`isbn`")
     public Book getBook() {
         return book;
     }
@@ -31,7 +39,7 @@ public class Item {
         this.book = book;
     }
 
-    @Column(name = "num")
+    @Column(name = "`num`")
     public Integer getNum() {
         return num;
     }

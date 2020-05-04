@@ -5,5 +5,6 @@ import com.example.bookstore.util.Message;
 
 public interface BookService {
     Message findAllBooks();
+    Message getBookByIsbn(String isbn);
     Message addBook(Book book);
 }

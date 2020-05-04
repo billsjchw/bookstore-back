@@ -1,9 +1,10 @@
 package com.example.bookstore.entity;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
-@Table(name = "users")
+@Table(name = "`users`")
 public class User {
     private String username;
     private String password;
@@ -12,9 +13,10 @@ public class User {
     private Boolean banned;
     private Boolean admin;
     private Order cart;
+    private Set<Order> history;
 
     @Id
-    @Column(name = "username")
+    @Column(name = "`username`")
     public String getUsername() {
         return username;
     }
@@ -23,7 +25,7 @@ public class User {
         this.username = username;
     }
 
-    @Column(name = "password")
+    @Column(name = "`password`")
     public String getPassword() {
         return password;
     }
@@ -32,7 +34,7 @@ public class User {
         this.password = password;
     }
 
-    @Column(name = "email")
+    @Column(name = "`email`")
     public String getEmail() {
         return email;
     }
@@ -50,7 +52,7 @@ public class User {
         this.avatar = avatar;
     }
 
-    @Column(name = "banned")
+    @Column(name = "`banned`")
     public Boolean getBanned() {
         return banned;
     }
@@ -59,7 +61,7 @@ public class User {
         this.banned = banned;
     }
 
-    @Column(name = "admin")
+    @Column(name = "`admin`")
     public Boolean getAdmin() {
         return admin;
     }
@@ -69,12 +71,30 @@ public class User {
     }
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
-    @JoinColumn(name = "cart", referencedColumnName = "id")
+    @JoinColumn(name = "`cart`", referencedColumnName = "`id`")
     public Order getCart() {
         return cart;
     }
 
     public void setCart(Order cart) {
         this.cart = cart;
+    }
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    @JoinTable(
+            name = "`histories`",
+            joinColumns = {@JoinColumn(name = "`user`", referencedColumnName = "`username`")},
+            inverseJoinColumns = {@JoinColumn(name = "`order`", referencedColumnName = "`id`", unique = true)}
+    )
+    public Set<Order> getHistory() {
+        return history;
+    }
+
+    public void setHistory(Set<Order> history) {
+        this.history = history;
+    }
+
+    public void complete(Avatar avatar) {
+        this.avatar = avatar.getData();
     }
 }

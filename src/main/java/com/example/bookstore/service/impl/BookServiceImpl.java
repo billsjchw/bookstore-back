@@ -25,6 +25,14 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    public Message getBookByIsbn(String isbn) {
+        Book book = bookDao.getByIsbn(isbn);
+        if (book == null)
+            return new Message("BOOK_NOT_FOUND", null);
+        return new Message("SUCCESS", book);
+    }
+
+    @Override
     public Message addBook(Book book) {
         boolean admin = SecurityContextHolder.getContext().getAuthentication()
                 .getAuthorities().contains(new BookstoreAuthority(true));

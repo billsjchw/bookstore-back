@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.sql.Date;
 
 @Entity
-@Table(name = "books")
+@Table(name = "`books`")
 public class Book {
     private String isbn;
     private String title;
@@ -17,8 +17,14 @@ public class Book {
     private Integer price;
     private Integer stock;
 
+    public Book() {}
+
+    public Book(String isbn) {
+        this.isbn = isbn;
+    }
+
     @Id
-    @Column(name = "isbn")
+    @Column(name = "`isbn`")
     public String getIsbn() {
         return isbn;
     }
@@ -27,7 +33,7 @@ public class Book {
         this.isbn = isbn;
     }
 
-    @Column(name = "title")
+    @Column(name = "`title`")
     public String getTitle() {
         return title;
     }
@@ -36,7 +42,7 @@ public class Book {
         this.title = title;
     }
 
-    @Column(name = "author")
+    @Column(name = "`author`")
     public String getAuthor() {
         return author;
     }
@@ -45,7 +51,7 @@ public class Book {
         this.author = author;
     }
 
-    @Column(name = "lang")
+    @Column(name = "`lang`")
     public String getLang() {
         return lang;
     }
@@ -54,7 +60,7 @@ public class Book {
         this.lang = lang;
     }
 
-    @Column(name = "press")
+    @Column(name = "`press`")
     public String getPress() {
         return press;
     }
@@ -63,7 +69,7 @@ public class Book {
         this.press = press;
     }
 
-    @Column(name = "date")
+    @Column(name = "`date`")
     public Date getDate() {
         return date;
     }
@@ -73,11 +79,11 @@ public class Book {
     }
 
     @Transient
-    public String getIntroduction() {
+    public String getIntro() {
         return intro;
     }
 
-    public void setIntroduction(String intro) {
+    public void setIntro(String intro) {
         this.intro = intro;
     }
 
@@ -90,7 +96,7 @@ public class Book {
         this.cover = cover;
     }
 
-    @Column(name = "price")
+    @Column(name = "`price`")
     public Integer getPrice() {
         return price;
     }
@@ -99,12 +105,17 @@ public class Book {
         this.price = price;
     }
 
-    @Column(name = "stock")
+    @Column(name = "`stock`")
     public Integer getStock() {
         return stock;
     }
 
     public void setStock(Integer stock) {
         this.stock = stock;
+    }
+
+    public void complete(Cover cover, Introduction intro) {
+        this.cover = cover.getData();
+        this.intro = intro.getData();
     }
 }

@@ -31,10 +31,23 @@ public class BookDaoImpl implements BookDao {
         List<Introduction> introductions = introRepo.findAllByOrderByIsbn();
         int size = books.size();
         for (int i = 0; i < size; ++i) {
-            books.get(i).setCover(covers.get(i).getData());
-            books.get(i).setIntroduction(introductions.get(i).getData());
+            Book book = books.get(i);
+            Cover cover = covers.get(i);
+            Introduction intro = introductions.get(i);
+            book.complete(cover, intro);
         }
         return books;
+    }
+
+    @Override
+    public Book getByIsbn(String isbn) {
+        Book book = bookRepo.findById(isbn).orElse(null);
+        Cover cover = coverRepo.findById(isbn).orElse(null);
+        Introduction intro = introRepo.findById(isbn).orElse(null);
+        if (book == null || cover == null || intro == null)
+            return null;
+        book.complete(cover, intro);
+        return book;
     }
 
     @Override

@@ -11,9 +11,9 @@ public class Avatar {
 
     public Avatar() {}
 
-    public Avatar(String username, String data) {
-        this.username = username;
-        this.data = data;
+    public Avatar(User user) {
+        this.username = user.getUsername();
+        this.data = user.getAvatar();
     }
 
     @Id

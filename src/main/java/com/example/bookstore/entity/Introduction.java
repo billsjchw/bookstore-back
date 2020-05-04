@@ -13,7 +13,7 @@ public class Introduction {
 
     public Introduction(Book book) {
         this.isbn = book.getIsbn();
-        this.data = book.getIntroduction();
+        this.data = book.getIntro();
     }
 
     @Id
