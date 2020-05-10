@@ -2,20 +2,50 @@ package com.example.bookstore.entity;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.Objects;
 
 @Entity
 @Table(name = "`books`")
+@Access(value = AccessType.FIELD)
 public class Book {
+    @Id
+    @Basic
+    @Column(name = "isbn")
     private String isbn;
+
+    @Basic
+    @Column(name = "`title`")
     private String title;
+
+    @Basic
+    @Column(name = "`author`")
     private String author;
-    private String lang;
+
+    @Basic
+    @Column(name = "`language`")
+    private String language;
+
+    @Basic
+    @Column(name = "`press`")
     private String press;
+
+    @Basic
+    @Column(name = "`date`")
     private Date date;
-    private String intro;
-    private String cover;
+
+    @Basic
+    @Column(name = "`price`")
     private Integer price;
+
+    @Basic
+    @Column(name = "`stock`")
     private Integer stock;
+
+    @Transient
+    private Cover cover;
+
+    @Transient
+    private Introduction introduction;
 
     public Book() {}
 
@@ -23,8 +53,6 @@ public class Book {
         this.isbn = isbn;
     }
 
-    @Id
-    @Column(name = "`isbn`")
     public String getIsbn() {
         return isbn;
     }
@@ -33,7 +61,6 @@ public class Book {
         this.isbn = isbn;
     }
 
-    @Column(name = "`title`")
     public String getTitle() {
         return title;
     }
@@ -42,7 +69,6 @@ public class Book {
         this.title = title;
     }
 
-    @Column(name = "`author`")
     public String getAuthor() {
         return author;
     }
@@ -51,16 +77,14 @@ public class Book {
         this.author = author;
     }
 
-    @Column(name = "`lang`")
-    public String getLang() {
-        return lang;
+    public String getLanguage() {
+        return language;
     }
 
-    public void setLang(String lang) {
-        this.lang = lang;
+    public void setLanguage(String language) {
+        this.language = language;
     }
 
-    @Column(name = "`press`")
     public String getPress() {
         return press;
     }
@@ -69,7 +93,6 @@ public class Book {
         this.press = press;
     }
 
-    @Column(name = "`date`")
     public Date getDate() {
         return date;
     }
@@ -78,25 +101,6 @@ public class Book {
         this.date = date;
     }
 
-    @Transient
-    public String getIntro() {
-        return intro;
-    }
-
-    public void setIntro(String intro) {
-        this.intro = intro;
-    }
-
-    @Transient
-    public String getCover() {
-        return cover;
-    }
-
-    public void setCover(String cover) {
-        this.cover = cover;
-    }
-
-    @Column(name = "`price`")
     public Integer getPrice() {
         return price;
     }
@@ -105,7 +109,6 @@ public class Book {
         this.price = price;
     }
 
-    @Column(name = "`stock`")
     public Integer getStock() {
         return stock;
     }
@@ -114,8 +117,32 @@ public class Book {
         this.stock = stock;
     }
 
-    public void complete(Cover cover, Introduction intro) {
-        this.cover = cover.getData();
-        this.intro = intro.getData();
+    public Cover getCover() {
+        return cover;
+    }
+
+    public void setCover(Cover cover) {
+        this.cover = cover;
+    }
+
+    public Introduction getIntroduction() {
+        return introduction;
+    }
+
+    public void setIntroduction(Introduction introduction) {
+        this.introduction = introduction;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Book book = (Book) o;
+        return isbn.equals(book.isbn);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(isbn);
     }
 }

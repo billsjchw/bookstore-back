@@ -5,8 +5,8 @@ import com.example.bookstore.entity.Book;
 import java.util.List;
 
 public interface BookDao {
-    boolean existsByIsbn(String isbn);
+    boolean existByIsbn(String isbn);
+    Book findByIsbn(String isbn);
     List<Book> findAll();
-    Book getByIsbn(String isbn);
     void save(Book book);
 }

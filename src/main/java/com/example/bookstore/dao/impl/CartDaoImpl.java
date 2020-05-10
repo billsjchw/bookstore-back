@@ -1,34 +1,39 @@
 package com.example.bookstore.dao.impl;
 
-import com.example.bookstore.dao.OrderDao;
+import com.example.bookstore.dao.CartDao;
 import com.example.bookstore.entity.*;
+import com.example.bookstore.repository.CartRepository;
 import com.example.bookstore.repository.CoverRepository;
 import com.example.bookstore.repository.IntroductionRepository;
-import com.example.bookstore.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
 @Repository
-public class OrderDaoImpl implements OrderDao {
-    @Autowired private OrderRepository orderRepository;
+public class CartDaoImpl implements CartDao {
+    @Autowired private CartRepository cartRepository;
     @Autowired private CoverRepository coverRepository;
     @Autowired private IntroductionRepository introductionRepository;
 
     @Override
-    public List<Order> findAllByUsername(String username) {
-        List<Order> orders = orderRepository.findAllByUsername(username);
-        for (Order order : orders)
-            for (OrderItem item : order.getItems())
-                completeBook(item.getBook());
-        return orders;
+    public Cart findOneByUsername(String username) {
+        Cart cart = cartRepository.findOneByUsername(username).orElse(null);
+        if (cart == null)
+            return null;
+        for (CartItem item : cart.getItems())
+            completeBook(item.getBook());
+        return cart;
     }
 
     @Override
-    public void save(Order order) {
-        orderRepository.save(order);
+    public void save(Cart cart) {
+        cartRepository.save(cart);
     }
+
+    @Override
+    public void delete(Cart cart) {
+        cartRepository.delete(cart);
+    }
+
 
     private void completeBook(Book book) {
         if (book == null)

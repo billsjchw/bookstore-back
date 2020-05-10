@@ -8,16 +8,16 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class BookController {
-    @Autowired BookService bookService;
+    @Autowired private BookService bookService;
+
+    @GetMapping("/book/find-book-by-isbn")
+    Message findBookByIsbn(@RequestParam String isbn) {
+        return bookService.findBookByIsbn(isbn);
+    }
 
     @GetMapping("/book/find-all-books")
     Message findAllBooks() {
         return bookService.findAllBooks();
-    }
-
-    @GetMapping("/book/get-book-by-isbn")
-    Message getBookByIsbn(@RequestParam String isbn) {
-        return bookService.getBookByIsbn(isbn);
     }
 
     @PostMapping("/book/add-book")
