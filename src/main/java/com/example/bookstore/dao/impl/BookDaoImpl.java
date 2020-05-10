@@ -8,54 +8,52 @@ import com.example.bookstore.repository.BookRepository;
 import com.example.bookstore.repository.CoverRepository;
 import com.example.bookstore.repository.IntroductionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.querydsl.QSort;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
 public class BookDaoImpl implements BookDao {
-    @Autowired BookRepository bookRepo;
-    @Autowired CoverRepository coverRepo;
-    @Autowired IntroductionRepository introRepo;
+    @Autowired private BookRepository bookRepository;
+    @Autowired private CoverRepository coverRepository;
+    @Autowired private IntroductionRepository introductionRepository;
 
     @Override
-    public boolean existsByIsbn(String isbn) {
-        return bookRepo.existsById(isbn);
+    public boolean existByIsbn(String isbn) {
+        return bookRepository.existsById(isbn);
     }
 
     @Override
-    public List<Book> findAll() {
-        List<Book> books = bookRepo.findAllByOrderByIsbnAsc();
-        List<Cover> covers = coverRepo.findAllByOrderByIsbn();
-        List<Introduction> introductions = introRepo.findAllByOrderByIsbn();
-        int size = books.size();
-        for (int i = 0; i < size; ++i) {
-            Book book = books.get(i);
-            Cover cover = covers.get(i);
-            Introduction intro = introductions.get(i);
-            book.complete(cover, intro);
-        }
-        return books;
-    }
-
-    @Override
-    public Book getByIsbn(String isbn) {
-        Book book = bookRepo.findById(isbn).orElse(null);
-        Cover cover = coverRepo.findById(isbn).orElse(null);
-        Introduction intro = introRepo.findById(isbn).orElse(null);
-        if (book == null || cover == null || intro == null)
-            return null;
-        book.complete(cover, intro);
+    public Book findByIsbn(String isbn) {
+        Book book = bookRepository.findById(isbn).orElse(null);
+        completeBook(book);
         return book;
     }
 
     @Override
+    public List<Book> findAll() {
+        List<Book> books = bookRepository.findAll();
+        for (Book book : books)
+            completeBook(book);
+        return books;
+    }
+
+    @Override
     public void save(Book book) {
-        Cover cover = new Cover(book);
-        Introduction intro = new Introduction(book);
-        bookRepo.save(book);
-        coverRepo.save(cover);
-        introRepo.save(intro);
+        Cover cover = book.getCover();
+        Introduction introduction = book.getIntroduction();
+        bookRepository.save(book);
+        coverRepository.save(cover);
+        introductionRepository.save(introduction);
+    }
+
+    private void completeBook(Book book) {
+        if (book == null)
+            return;
+        String isbn = book.getIsbn();
+        Cover cover = coverRepository.findById(isbn).orElse(null);
+        Introduction introduction = introductionRepository.findById(isbn).orElse(null);
+        book.setCover(cover);
+        book.setIntroduction(introduction);
     }
 }

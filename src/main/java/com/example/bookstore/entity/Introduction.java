@@ -1,22 +1,19 @@
 package com.example.bookstore.entity;
 
+import org.springframework.data.annotation.AccessType;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-@Document(collection = "introductions")
+@Document(value = "introductions")
+@AccessType(value = AccessType.Type.FIELD)
 public class Introduction {
+    @Id
     private String isbn;
+
+    @Field(name = "data")
     private String data;
 
-    public Introduction() {}
-
-    public Introduction(Book book) {
-        this.isbn = book.getIsbn();
-        this.data = book.getIntro();
-    }
-
-    @Id
     public String getIsbn() {
         return isbn;
     }
@@ -25,7 +22,6 @@ public class Introduction {
         this.isbn = isbn;
     }
 
-    @Field("data")
     public String getData() {
         return data;
     }

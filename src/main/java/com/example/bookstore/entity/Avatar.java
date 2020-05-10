@@ -1,22 +1,21 @@
 package com.example.bookstore.entity;
 
+import org.springframework.data.annotation.AccessType;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import java.util.Objects;
+
 @Document(collection = "avatars")
+@AccessType(value = AccessType.Type.FIELD)
 public class Avatar {
+    @Id
     private String username;
+
+    @Field("data")
     private String data;
 
-    public Avatar() {}
-
-    public Avatar(User user) {
-        this.username = user.getUsername();
-        this.data = user.getAvatar();
-    }
-
-    @Id
     public String getUsername() {
         return username;
     }
@@ -25,12 +24,24 @@ public class Avatar {
         this.username = username;
     }
 
-    @Field("data")
     public String getData() {
         return data;
     }
 
     public void setData(String data) {
         this.data = data;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Avatar avatar = (Avatar) o;
+        return username.equals(avatar.username);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(username);
     }
 }

@@ -1,22 +1,57 @@
 package com.example.bookstore.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import javax.persistence.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
 @Table(name = "`users`")
-public class User {
-    private String username;
-    private String password;
-    private String email;
-    private String avatar;
-    private Boolean banned;
-    private Boolean admin;
-    private Order cart;
-    private Set<Order> history;
-
+@Access(value = AccessType.FIELD)
+public class User implements UserDetails {
     @Id
+    @Basic
     @Column(name = "`username`")
+    private String username;
+
+    @Basic
+    @Column(name = "`password`")
+    private String password;
+
+    @Basic
+    @Column(name = "`first_name`")
+    private String firstName;
+
+    @Basic
+    @Column(name = "`last_name`")
+    private String lastName;
+
+    @Basic
+    @Column(name = "`email`")
+    private String email;
+
+    @Basic
+    @Column(name = "`enabled`")
+    private Boolean enabled;
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
+    @JoinTable(
+            name = "`user_role`",
+            joinColumns = @JoinColumn(name = "`user`", referencedColumnName = "`username`"),
+            inverseJoinColumns = @JoinColumn(name = "`role`", referencedColumnName = "`name`")
+    )
+    private Set<Role> roles;
+
+    @Transient
+    private Avatar avatar;
+
+    @Override
     public String getUsername() {
         return username;
     }
@@ -25,16 +60,29 @@ public class User {
         this.username = username;
     }
 
-    @Column(name = "`password`")
+    @Override
+    @JsonIgnore
     public String getPassword() {
         return password;
     }
 
+    @JsonProperty
     public void setPassword(String password) {
         this.password = password;
     }
 
-    @Column(name = "`email`")
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
     public String getEmail() {
         return email;
     }
@@ -43,58 +91,68 @@ public class User {
         this.email = email;
     }
 
-    @Transient
-    public String getAvatar() {
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
+    public Avatar getAvatar() {
         return avatar;
     }
 
-    public void setAvatar(String avatar) {
+    public void setAvatar(Avatar avatar) {
         this.avatar = avatar;
     }
 
-    @Column(name = "`banned`")
-    public Boolean getBanned() {
-        return banned;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return username.equals(user.username);
     }
 
-    public void setBanned(Boolean banned) {
-        this.banned = banned;
+    @Override
+    public int hashCode() {
+        return Objects.hash(username);
     }
 
-    @Column(name = "`admin`")
-    public Boolean getAdmin() {
-        return admin;
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        Set<Authority> authorities = new HashSet<>();
+        for (Role role : roles)
+            authorities.addAll(role.getAuthorities());
+        return authorities;
     }
 
-    public void setAdmin(Boolean admin) {
-        this.admin = admin;
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
     }
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
-    @JoinColumn(name = "`cart`", referencedColumnName = "`id`")
-    public Order getCart() {
-        return cart;
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
     }
 
-    public void setCart(Order cart) {
-        this.cart = cart;
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
     }
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
-    @JoinTable(
-            name = "`histories`",
-            joinColumns = {@JoinColumn(name = "`user`", referencedColumnName = "`username`")},
-            inverseJoinColumns = {@JoinColumn(name = "`order`", referencedColumnName = "`id`", unique = true)}
-    )
-    public Set<Order> getHistory() {
-        return history;
-    }
-
-    public void setHistory(Set<Order> history) {
-        this.history = history;
-    }
-
-    public void complete(Avatar avatar) {
-        this.avatar = avatar.getData();
+    @Override
+    public boolean isEnabled() {
+        return enabled;
     }
 }

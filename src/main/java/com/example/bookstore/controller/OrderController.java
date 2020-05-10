@@ -1,34 +1,25 @@
 package com.example.bookstore.controller;
 
+import com.example.bookstore.entity.Consignee;
 import com.example.bookstore.service.OrderService;
 import com.example.bookstore.util.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class OrderController {
-    @Autowired OrderService orderService;
+    @Autowired private OrderService orderService;
 
-    @PostMapping(value = "/order/add-to-cart")
-    Message addToCart(@RequestParam String isbn, @RequestParam int inc) {
-        return orderService.addToCart(isbn, inc);
-    }
-
-    @GetMapping(value = "/order/get-cart")
-    Message getCart() {
-        return orderService.getCart();
-    }
-
-    @GetMapping(value = "/order/get-history")
-    Message getHistory() {
-        return orderService.getHistory();
+    @GetMapping(value = "/order/find-all-my-orders")
+    Message findAllMyOrders() {
+        return orderService.findAllMyOrders();
     }
 
     @PostMapping(value = "/order/place-order")
-    Message placeOrder() {
-        return orderService.placeOrder();
+    Message placeOrder(@RequestBody Consignee consignee) {
+        return orderService.placeOrder(consignee);
     }
 }
