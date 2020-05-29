@@ -5,6 +5,7 @@ import com.example.bookstore.util.Message;
 
 public interface BookService {
     Message findBookByIsbn(String isbn);
-    Message findAllBooks();
+    Message findAllBooks(int page, int size);
+    Message BookFuzzySearch(String keyword, int page, int size);
     Message addBook(Book book);
 }

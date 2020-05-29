@@ -6,6 +6,7 @@ import com.example.bookstore.entity.Book;
 import com.example.bookstore.service.BookService;
 import com.example.bookstore.util.Message;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -28,8 +29,25 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Message findAllBooks() {
-        List<Book> books = bookDao.findAll();
+    public Message findAllBooks(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size,
+                Sort.by(Sort.Order.asc("isbn")));
+        Page<Book> books = bookDao.findAll(pageable);
+        return new Message("SUCCESS", books);
+    }
+
+    @Override
+    public Message BookFuzzySearch(String keyword, int page, int size) {
+        Example<Book> example = Example.of(
+                new Book(keyword, keyword, keyword),
+                ExampleMatcher
+                        .matchingAny()
+                        .withIgnoreCase()
+                        .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
+        );
+        Pageable pageable = PageRequest.of(page, size,
+                Sort.by(Sort.Order.asc("isbn")));
+        Page<Book> books = bookDao.findAll(example, pageable);
         return new Message("SUCCESS", books);
     }
 

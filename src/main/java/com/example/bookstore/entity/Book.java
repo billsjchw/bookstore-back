@@ -53,6 +53,12 @@ public class Book {
         this.isbn = isbn;
     }
 
+    public Book(String title, String author, String press) {
+        this.title = title;
+        this.author = author;
+        this.press = press;
+    }
+
     public String getIsbn() {
         return isbn;
     }
