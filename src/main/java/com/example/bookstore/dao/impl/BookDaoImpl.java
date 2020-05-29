@@ -8,6 +8,7 @@ import com.example.bookstore.repository.BookRepository;
 import com.example.bookstore.repository.CoverRepository;
 import com.example.bookstore.repository.IntroductionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -33,6 +34,22 @@ public class BookDaoImpl implements BookDao {
     @Override
     public List<Book> findAll() {
         List<Book> books = bookRepository.findAll();
+        for (Book book : books)
+            completeBook(book);
+        return books;
+    }
+
+    @Override
+    public Page<Book> findAll(Pageable pageable) {
+        Page<Book> books = bookRepository.findAll(pageable);
+        for (Book book : books)
+            completeBook(book);
+        return books;
+    }
+
+    @Override
+    public Page<Book> findAll(Example<Book> example, Pageable pageable) {
+        Page<Book> books = bookRepository.findAll(example, pageable);
         for (Book book : books)
             completeBook(book);
         return books;
