@@ -15,8 +15,8 @@ public class CartDaoImpl implements CartDao {
     @Autowired private IntroductionRepository introductionRepository;
 
     @Override
-    public Cart findOneByUsername(String username) {
-        Cart cart = cartRepository.findOneByUsername(username).orElse(null);
+    public Cart findOneByUserId(int userId) {
+        Cart cart = cartRepository.findOneByUserId(userId).orElse(null);
         if (cart == null)
             return null;
         for (CartItem item : cart.getItems())
@@ -29,18 +29,12 @@ public class CartDaoImpl implements CartDao {
         cartRepository.save(cart);
     }
 
-    @Override
-    public void delete(Cart cart) {
-        cartRepository.delete(cart);
-    }
-
-
     private void completeBook(Book book) {
         if (book == null)
             return;
-        String isbn = book.getIsbn();
-        Cover cover = coverRepository.findById(isbn).orElse(null);
-        Introduction introduction = introductionRepository.findById(isbn).orElse(null);
+        int bookId = book.getId();
+        Cover cover = coverRepository.findById(bookId).orElse(null);
+        Introduction introduction = introductionRepository.findById(bookId).orElse(null);
         book.setCover(cover);
         book.setIntroduction(introduction);
     }

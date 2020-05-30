@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.*;
 public class BookController {
     @Autowired private BookService bookService;
 
-    @GetMapping("/book/find-book-by-isbn")
-    Message findBookByIsbn(@RequestParam String isbn) {
-        return bookService.findBookByIsbn(isbn);
+    @GetMapping("/book/find-book-by-id")
+    Message findBookById(@RequestParam int id) {
+        return bookService.findBookById(id);
     }
 
     @GetMapping("/book/find-all-books")

@@ -2,6 +2,7 @@ package com.example.bookstore.entity;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -16,7 +17,7 @@ public class Cart {
 
     @Basic
     @Column(name = "`user`")
-    private String username;
+    private Integer userId;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(
@@ -27,8 +28,8 @@ public class Cart {
 
     public Cart() {}
 
-    public Cart(String username) {
-        this.username = username;
+    public Cart(Integer userId) {
+        this.userId = userId;
         this.items = new HashSet<>();
     }
 
@@ -40,12 +41,12 @@ public class Cart {
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
+    public Integer getUserId() {
+        return userId;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
     public Set<CartItem> getItems() {
@@ -54,5 +55,18 @@ public class Cart {
 
     public void setItems(Set<CartItem> items) {
         this.items = items;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Cart cart = (Cart) o;
+        return id.equals(cart.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

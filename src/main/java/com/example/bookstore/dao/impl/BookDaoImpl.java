@@ -20,13 +20,13 @@ public class BookDaoImpl implements BookDao {
     @Autowired private IntroductionRepository introductionRepository;
 
     @Override
-    public boolean existByIsbn(String isbn) {
-        return bookRepository.existsById(isbn);
+    public boolean existById(int id) {
+        return bookRepository.existsById(id);
     }
 
     @Override
-    public Book findByIsbn(String isbn) {
-        Book book = bookRepository.findById(isbn).orElse(null);
+    public Book findById(int id) {
+        Book book = bookRepository.findById(id).orElse(null);
         completeBook(book);
         return book;
     }
@@ -57,9 +57,12 @@ public class BookDaoImpl implements BookDao {
 
     @Override
     public void save(Book book) {
+        book = bookRepository.saveAndFlush(book);
+        int bookId = book.getId();
         Cover cover = book.getCover();
+        cover.setBookId(bookId);
         Introduction introduction = book.getIntroduction();
-        bookRepository.save(book);
+        introduction.setBookId(bookId);
         coverRepository.save(cover);
         introductionRepository.save(introduction);
     }
@@ -67,9 +70,9 @@ public class BookDaoImpl implements BookDao {
     private void completeBook(Book book) {
         if (book == null)
             return;
-        String isbn = book.getIsbn();
-        Cover cover = coverRepository.findById(isbn).orElse(null);
-        Introduction introduction = introductionRepository.findById(isbn).orElse(null);
+        int bookId = book.getId();
+        Cover cover = coverRepository.findById(bookId).orElse(null);
+        Introduction introduction = introductionRepository.findById(bookId).orElse(null);
         book.setCover(cover);
         book.setIntroduction(introduction);
     }

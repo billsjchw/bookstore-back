@@ -4,5 +4,5 @@ import com.example.bookstore.util.Message;
 
 public interface CartService {
     Message findMyCart();
-    Message addToCart(String isbn, int increment);
+    Message addToCart(int bookId, int increment);
 }

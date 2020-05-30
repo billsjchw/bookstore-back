@@ -18,7 +18,7 @@ public class CartController {
     }
 
     @PostMapping("/cart/add-to-cart")
-    Message addToCart(@RequestParam String isbn, @RequestParam int increment) {
-        return cartService.addToCart(isbn, increment);
+    Message addToCart(@RequestParam int id, @RequestParam int increment) {
+        return cartService.addToCart(id, increment);
     }
 }

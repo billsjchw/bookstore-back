@@ -7,7 +7,7 @@ import java.util.Objects;
 @Access(value = AccessType.FIELD)
 public class OrderItem {
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
-    @JoinColumn(name = "`book`", referencedColumnName = "`isbn`")
+    @JoinColumn(name = "`book`", referencedColumnName = "`id`")
     private Book book;
 
     @Basic

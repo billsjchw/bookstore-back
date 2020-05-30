@@ -7,7 +7,7 @@ import java.util.Objects;
 @Access(AccessType.FIELD)
 public class CartItem {
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
-    @JoinColumn(name = "`book`", referencedColumnName = "`isbn`")
+    @JoinColumn(name = "`book`", referencedColumnName = "`id`")
     private Book book;
 
     @Basic

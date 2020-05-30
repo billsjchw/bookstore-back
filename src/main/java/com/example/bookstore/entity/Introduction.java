@@ -5,21 +5,23 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import java.util.Objects;
+
 @Document(value = "introductions")
 @AccessType(value = AccessType.Type.FIELD)
 public class Introduction {
     @Id
-    private String isbn;
+    private Integer bookId;
 
     @Field(name = "data")
     private String data;
 
-    public String getIsbn() {
-        return isbn;
+    public Integer getBookId() {
+        return bookId;
     }
 
-    public void setIsbn(String isbn) {
-        this.isbn = isbn;
+    public void setBookId(Integer bookId) {
+        this.bookId = bookId;
     }
 
     public String getData() {
@@ -28,5 +30,18 @@ public class Introduction {
 
     public void setData(String data) {
         this.data = data;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Introduction that = (Introduction) o;
+        return bookId.equals(that.bookId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(bookId);
     }
 }

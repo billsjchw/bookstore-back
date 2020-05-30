@@ -1,17 +1,17 @@
-insert into `roles`
+insert into `roles`(`name`)
 values ('ADMIN');
 
-insert into `authorities`
+insert into `authorities`(`name`)
 values ('BOOK_ADMIN'), ('USER_ADMIN');
 
 insert into `role_authority`
-values ('ADMIN', 'BOOK_ADMIN'), ('ADMIN', 'USER_ADMIN');
+values (1, 1), (1, 2);
 
-insert into `users`
+insert into `users`(`username`, `password`, `first_name`, `last_name`, `email`, `enabled`)
 values ('admin', '1234', 'bookstore', 'administrator', 'admin@example.com', true);
 
 insert into `user_role`
-values ('admin', 'ADMIN');
+values (1, 1);
 
 insert into `carts`(`user`)
-values ('admin');
+values (1);

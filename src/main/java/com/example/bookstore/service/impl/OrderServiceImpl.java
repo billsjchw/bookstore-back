@@ -24,17 +24,17 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Message findAllMyOrders() {
-        String username = SecurityContextHolder.getContext()
-                .getAuthentication().getName();
-        List<Order> orders = orderDao.findAllByUsername(username);
+        int userId = ((User) SecurityContextHolder.getContext()
+                .getAuthentication().getDetails()).getId();
+        List<Order> orders = orderDao.findAllByUserId(userId);
         return new Message("SUCCESS", orders);
     }
 
     @Override
     public Message placeOrder(Consignee consignee) {
-        String username = SecurityContextHolder.getContext()
-                .getAuthentication().getName();
-        Cart cart = cartDao.findOneByUsername(username);
+        int userId = ((User) SecurityContextHolder.getContext()
+                .getAuthentication().getDetails()).getId();
+        Cart cart = cartDao.findOneByUserId(userId);
         Set<CartItem> cartItems = cart.getItems();
         if (cartItems.isEmpty())
             return new Message("EMPTY_CART", null);
@@ -51,7 +51,7 @@ public class OrderServiceImpl implements OrderService {
         Set<OrderItem> orderItems = new HashSet<>();
         for (CartItem cartItem : cartItems)
             orderItems.add(new OrderItem(cartItem.getBook(), cartItem.getAmount()));
-        Order order = new Order(username, consignee, orderItems);
+        Order order = new Order(userId, consignee, orderItems);
         orderDao.save(order);
         cart.getItems().clear();
         cartDao.save(cart);

@@ -11,17 +11,17 @@ import java.util.Objects;
 @AccessType(value = AccessType.Type.FIELD)
 public class Avatar {
     @Id
-    private String username;
+    private Integer userId;
 
     @Field("data")
     private String data;
 
-    public String getUsername() {
-        return username;
+    public Integer getUserId() {
+        return userId;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
     public String getData() {
@@ -37,11 +37,11 @@ public class Avatar {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Avatar avatar = (Avatar) o;
-        return username.equals(avatar.username);
+        return userId.equals(avatar.userId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(username);
+        return Objects.hash(userId);
     }
 }

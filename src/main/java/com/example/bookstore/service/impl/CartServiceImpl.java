@@ -5,6 +5,7 @@ import com.example.bookstore.dao.CartDao;
 import com.example.bookstore.entity.Book;
 import com.example.bookstore.entity.Cart;
 import com.example.bookstore.entity.CartItem;
+import com.example.bookstore.entity.User;
 import com.example.bookstore.service.CartService;
 import com.example.bookstore.util.Message;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,22 +23,22 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public Message findMyCart() {
-        String username = SecurityContextHolder.getContext()
-                .getAuthentication().getName();
-        Cart cart = cartDao.findOneByUsername(username);
+        int userId = ((User) SecurityContextHolder.getContext()
+                .getAuthentication().getDetails()).getId();
+        Cart cart = cartDao.findOneByUserId(userId);
         return new Message("SUCCESS", cart);
     }
 
     @Override
-    public Message addToCart(String isbn, int increment) {
-        String username = SecurityContextHolder.getContext()
-                .getAuthentication().getName();
-        if (!bookDao.existByIsbn(isbn))
+    public Message addToCart(int bookId, int increment) {
+        int userId = ((User) SecurityContextHolder.getContext()
+                .getAuthentication().getDetails()).getId();
+        if (!bookDao.existById(bookId))
             return new Message("BOOK_NOT_FOUND", null);
-        Cart cart = cartDao.findOneByUsername(username);
+        Cart cart = cartDao.findOneByUserId(userId);
         Set<CartItem> items = cart.getItems();
         for (CartItem item : items)
-            if (item.getBook().getIsbn().equals(isbn)) {
+            if (item.getBook().getId().equals(bookId)) {
                 int amount = item.getAmount();
                 if (amount + increment < 0)
                     return new Message("OVERFLOW", null);
@@ -45,7 +46,7 @@ public class CartServiceImpl implements CartService {
                 cartDao.save(cart);
                 return new Message("SUCCESS", null);
             }
-        items.add(new CartItem(new Book(isbn), increment));
+        items.add(new CartItem(new Book(bookId), increment));
         cartDao.save(cart);
         return new Message("SUCCESS", null);
     }

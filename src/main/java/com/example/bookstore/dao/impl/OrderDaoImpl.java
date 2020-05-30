@@ -17,8 +17,8 @@ public class OrderDaoImpl implements OrderDao {
     @Autowired private IntroductionRepository introductionRepository;
 
     @Override
-    public List<Order> findAllByUsername(String username) {
-        List<Order> orders = orderRepository.findAllByUsername(username);
+    public List<Order> findAllByUserId(int userId) {
+        List<Order> orders = orderRepository.findAllByUserId(userId);
         for (Order order : orders)
             for (OrderItem item : order.getItems())
                 completeBook(item.getBook());
@@ -33,9 +33,9 @@ public class OrderDaoImpl implements OrderDao {
     private void completeBook(Book book) {
         if (book == null)
             return;
-        String isbn = book.getIsbn();
-        Cover cover = coverRepository.findById(isbn).orElse(null);
-        Introduction introduction = introductionRepository.findById(isbn).orElse(null);
+        int bookId = book.getId();
+        Cover cover = coverRepository.findById(bookId).orElse(null);
+        Introduction introduction = introductionRepository.findById(bookId).orElse(null);
         book.setCover(cover);
         book.setIntroduction(introduction);
     }

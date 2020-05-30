@@ -16,6 +16,11 @@ import java.util.Set;
 @Access(value = AccessType.FIELD)
 public class User implements UserDetails {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic
+    @Column(name = "`id`")
+    private Integer id;
+
     @Basic
     @Column(name = "`username`")
     private String username;
@@ -50,6 +55,14 @@ public class User implements UserDetails {
 
     @Transient
     private Avatar avatar;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     @Override
     public String getUsername() {
@@ -120,12 +133,12 @@ public class User implements UserDetails {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return username.equals(user.username);
+        return id.equals(user.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(username);
+        return Objects.hash(id);
     }
 
     @Override

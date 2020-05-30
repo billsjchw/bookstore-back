@@ -8,8 +8,8 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface BookDao {
-    boolean existByIsbn(String isbn);
-    Book findByIsbn(String isbn);
+    boolean existById(int id);
+    Book findById(int id);
     List<Book> findAll();
     Page<Book> findAll(Pageable pageable);
     Page<Book> findAll(Example<Book> example, Pageable pageable);

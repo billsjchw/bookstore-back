@@ -2,6 +2,7 @@ package com.example.bookstore.entity;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -12,11 +13,11 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic
     @Column(name = "`id`")
-    private Long id;
+    private Integer id;
 
     @Basic
     @Column(name = "`user`")
-    private String username;
+    private Integer userId;
 
     @Embedded
     @AttributeOverride(name = "address", column = @Column(name = "`address`"))
@@ -49,28 +50,28 @@ public class Order {
 
     public Order() {}
 
-    public Order(String username, Consignee consignee, Set<OrderItem> items) {
-        this.username = username;
+    public Order(Integer userId, Consignee consignee, Set<OrderItem> items) {
+        this.userId = userId;
         this.consignee = consignee;
         this.items = items;
         this.status = "UNPAID";
         this.timePlaced = new Timestamp(System.currentTimeMillis());
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
+    public Integer getUserId() {
+        return userId;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
     public Consignee getConsignee() {
@@ -119,5 +120,18 @@ public class Order {
 
     public void setItems(Set<OrderItem> items) {
         this.items = items;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Order order = (Order) o;
+        return id.equals(order.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

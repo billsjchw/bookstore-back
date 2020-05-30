@@ -21,8 +21,8 @@ public class BookServiceImpl implements BookService {
     @Autowired BookDao bookDao;
 
     @Override
-    public Message findBookByIsbn(String isbn) {
-        Book book = bookDao.findByIsbn(isbn);
+    public Message findBookById(int id) {
+        Book book = bookDao.findById(id);
         if (book == null)
             return new Message("BOOK_NOT_FOUND", null);
         return new Message("SUCCESS", book);
@@ -55,11 +55,8 @@ public class BookServiceImpl implements BookService {
     public Message addBook(Book book) {
         Collection<? extends GrantedAuthority> authorities =
                 SecurityContextHolder.getContext().getAuthentication().getAuthorities();
-        if (!authorities.contains(new Authority("BOOK_ADMIN")))
+        if (!authorities.contains(new Authority(Authority.AuthorityId.BOOK_ADMIN)))
             return new Message("REJECTED", null);
-        String isbn = book.getIsbn();
-        if (bookDao.existByIsbn(isbn))
-            return new Message("DUP_ISBN", null);
         bookDao.save(book);
         return new Message("SUCCESS", null);
     }

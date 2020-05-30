@@ -14,8 +14,8 @@ public class UserDaoImpl implements UserDao {
     private @Autowired AvatarRepository avatarRepository;
 
     @Override
-    public User findByUsername(String username) {
-        User user = userRepository.findById(username).orElse(null);
+    public User findOneByUsername(String username) {
+        User user = userRepository.findOneByUsername(username).orElse(null);
         completeUser(user);
         return user;
     }
@@ -23,8 +23,8 @@ public class UserDaoImpl implements UserDao {
     private void completeUser(User user) {
         if (user == null)
             return;
-        String username = user.getUsername();
-        Avatar avatar = avatarRepository.findById(username).orElse(null);
+        int userId = user.getId();
+        Avatar avatar = avatarRepository.findById(userId).orElse(null);
         user.setAvatar(avatar);
     }
 }
