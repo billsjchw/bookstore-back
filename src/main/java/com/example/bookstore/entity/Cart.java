@@ -1,5 +1,7 @@
 package com.example.bookstore.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Objects;
@@ -68,5 +70,13 @@ public class Cart {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    @JsonIgnore
+    public CartItem getItem(int bookId) {
+        for (CartItem cartItem : items)
+            if (cartItem.getBook().getId() == bookId)
+                return cartItem;
+        return null;
     }
 }

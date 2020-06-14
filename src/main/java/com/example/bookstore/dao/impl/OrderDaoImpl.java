@@ -12,13 +12,13 @@ import java.util.List;
 
 @Repository
 public class OrderDaoImpl implements OrderDao {
-    @Autowired private OrderRepository orderRepository;
-    @Autowired private CoverRepository coverRepository;
-    @Autowired private IntroductionRepository introductionRepository;
+    @Autowired private OrderRepository orderRepo;
+    @Autowired private CoverRepository coverRepo;
+    @Autowired private IntroductionRepository introRepo;
 
     @Override
     public List<Order> findAllByUserId(int userId) {
-        List<Order> orders = orderRepository.findAllByUserId(userId);
+        List<Order> orders = orderRepo.findAllByUserId(userId);
         for (Order order : orders)
             for (OrderItem item : order.getItems())
                 completeBook(item.getBook());
@@ -27,16 +27,16 @@ public class OrderDaoImpl implements OrderDao {
 
     @Override
     public void save(Order order) {
-        orderRepository.save(order);
+        orderRepo.save(order);
     }
 
     private void completeBook(Book book) {
         if (book == null)
             return;
         int bookId = book.getId();
-        Cover cover = coverRepository.findById(bookId).orElse(null);
-        Introduction introduction = introductionRepository.findById(bookId).orElse(null);
+        Cover cover = coverRepo.findById(bookId).orElse(null);
+        Introduction intro = introRepo.findById(bookId).orElse(null);
         book.setCover(cover);
-        book.setIntroduction(introduction);
+        book.setIntro(intro);
     }
 }

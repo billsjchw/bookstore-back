@@ -11,17 +11,20 @@ public class BookController {
     @Autowired private BookService bookService;
 
     @GetMapping("/book/find-book-by-id")
-    Message findBookById(@RequestParam int id) {
+    Message findBookById(@RequestParam(value = "id") int id) {
         return bookService.findBookById(id);
     }
 
     @GetMapping("/book/find-all-books")
-    Message findAllBooks(@RequestParam int page, @RequestParam int size) {
+    Message findAllBooks(@RequestParam(value = "page") int page,
+                         @RequestParam(value = "size") int size) {
         return bookService.findAllBooks(page, size);
     }
 
     @GetMapping("/book/book-fuzzy-search")
-    Message bookFuzzySearch(@RequestParam String keyword, @RequestParam int page, @RequestParam int size) {
+    Message bookFuzzySearch(@RequestParam(value = "keyword") String keyword,
+                            @RequestParam(value = "page") int page,
+                            @RequestParam(value = "size") int size) {
         return bookService.BookFuzzySearch(keyword, page, size);
     }
 

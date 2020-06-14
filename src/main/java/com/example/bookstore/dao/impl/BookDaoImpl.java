@@ -15,25 +15,25 @@ import java.util.List;
 
 @Repository
 public class BookDaoImpl implements BookDao {
-    @Autowired private BookRepository bookRepository;
-    @Autowired private CoverRepository coverRepository;
-    @Autowired private IntroductionRepository introductionRepository;
+    @Autowired private BookRepository bookRepo;
+    @Autowired private CoverRepository coverRepo;
+    @Autowired private IntroductionRepository introRepo;
 
     @Override
     public boolean existById(int id) {
-        return bookRepository.existsById(id);
+        return bookRepo.existsById(id);
     }
 
     @Override
     public Book findById(int id) {
-        Book book = bookRepository.findById(id).orElse(null);
+        Book book = bookRepo.findById(id).orElse(null);
         completeBook(book);
         return book;
     }
 
     @Override
     public List<Book> findAll() {
-        List<Book> books = bookRepository.findAll();
+        List<Book> books = bookRepo.findAll();
         for (Book book : books)
             completeBook(book);
         return books;
@@ -41,7 +41,7 @@ public class BookDaoImpl implements BookDao {
 
     @Override
     public Page<Book> findAll(Pageable pageable) {
-        Page<Book> books = bookRepository.findAll(pageable);
+        Page<Book> books = bookRepo.findAll(pageable);
         for (Book book : books)
             completeBook(book);
         return books;
@@ -49,7 +49,7 @@ public class BookDaoImpl implements BookDao {
 
     @Override
     public Page<Book> findAll(Example<Book> example, Pageable pageable) {
-        Page<Book> books = bookRepository.findAll(example, pageable);
+        Page<Book> books = bookRepo.findAll(example, pageable);
         for (Book book : books)
             completeBook(book);
         return books;
@@ -57,23 +57,23 @@ public class BookDaoImpl implements BookDao {
 
     @Override
     public void save(Book book) {
-        book = bookRepository.saveAndFlush(book);
+        book = bookRepo.saveAndFlush(book);
         int bookId = book.getId();
         Cover cover = book.getCover();
         cover.setBookId(bookId);
-        Introduction introduction = book.getIntroduction();
-        introduction.setBookId(bookId);
-        coverRepository.save(cover);
-        introductionRepository.save(introduction);
+        Introduction intro = book.getIntro();
+        intro.setBookId(bookId);
+        coverRepo.save(cover);
+        introRepo.save(intro);
     }
 
     private void completeBook(Book book) {
         if (book == null)
             return;
         int bookId = book.getId();
-        Cover cover = coverRepository.findById(bookId).orElse(null);
-        Introduction introduction = introductionRepository.findById(bookId).orElse(null);
+        Cover cover = coverRepo.findById(bookId).orElse(null);
+        Introduction intro = introRepo.findById(bookId).orElse(null);
         book.setCover(cover);
-        book.setIntroduction(introduction);
+        book.setIntro(intro);
     }
 }

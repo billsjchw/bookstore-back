@@ -6,7 +6,8 @@ import javax.persistence.Embeddable;
 public class Consignee {
     private String address;
     private String phone;
-    private String name;
+    private String firstName;
+    private String lastName;
 
     public String getAddress() {
         return address;
@@ -24,11 +25,19 @@ public class Consignee {
         this.phone = phone;
     }
 
-    public String getName() {
-        return name;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 }

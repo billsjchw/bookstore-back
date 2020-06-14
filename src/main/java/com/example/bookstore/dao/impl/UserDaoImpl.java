@@ -10,12 +10,12 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class UserDaoImpl implements UserDao {
-    private @Autowired UserRepository userRepository;
-    private @Autowired AvatarRepository avatarRepository;
+    private @Autowired UserRepository userRepo;
+    private @Autowired AvatarRepository avatarRepo;
 
     @Override
     public User findOneByUsername(String username) {
-        User user = userRepository.findOneByUsername(username).orElse(null);
+        User user = userRepo.findOneByUsername(username).orElse(null);
         completeUser(user);
         return user;
     }
@@ -24,7 +24,7 @@ public class UserDaoImpl implements UserDao {
         if (user == null)
             return;
         int userId = user.getId();
-        Avatar avatar = avatarRepository.findById(userId).orElse(null);
+        Avatar avatar = avatarRepo.findById(userId).orElse(null);
         user.setAvatar(avatar);
     }
 }

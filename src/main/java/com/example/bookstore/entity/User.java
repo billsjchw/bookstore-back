@@ -48,8 +48,8 @@ public class User implements UserDetails {
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
     @JoinTable(
             name = "`user_role`",
-            joinColumns = @JoinColumn(name = "`user`", referencedColumnName = "`username`"),
-            inverseJoinColumns = @JoinColumn(name = "`role`", referencedColumnName = "`name`")
+            joinColumns = @JoinColumn(name = "`user`", referencedColumnName = "`id`"),
+            inverseJoinColumns = @JoinColumn(name = "`role`", referencedColumnName = "`id`")
     )
     private Set<Role> roles;
 
@@ -142,6 +142,7 @@ public class User implements UserDetails {
     }
 
     @Override
+    @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Set<Authority> authorities = new HashSet<>();
         for (Role role : roles)
@@ -150,21 +151,25 @@ public class User implements UserDetails {
     }
 
     @Override
+    @JsonIgnore
     public boolean isAccountNonExpired() {
         return true;
     }
 
     @Override
+    @JsonIgnore
     public boolean isAccountNonLocked() {
         return true;
     }
 
     @Override
+    @JsonIgnore
     public boolean isCredentialsNonExpired() {
         return true;
     }
 
     @Override
+    @JsonIgnore
     public boolean isEnabled() {
         return enabled;
     }

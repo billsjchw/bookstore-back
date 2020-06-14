@@ -27,8 +27,8 @@ public class Book {
     private String author;
 
     @Basic
-    @Column(name = "`language`")
-    private String language;
+    @Column(name = "`lang`")
+    private String lang;
 
     @Basic
     @Column(name = "`press`")
@@ -50,11 +50,11 @@ public class Book {
     private Cover cover;
 
     @Transient
-    private Introduction introduction;
+    private Introduction intro;
 
     public Book() {}
 
-    public Book(Integer id) {
+    public Book(int id) {
         this.id = id;
     }
 
@@ -96,12 +96,12 @@ public class Book {
         this.author = author;
     }
 
-    public String getLanguage() {
-        return language;
+    public String getLang() {
+        return lang;
     }
 
-    public void setLanguage(String language) {
-        this.language = language;
+    public void setLang(String language) {
+        this.lang = language;
     }
 
     public String getPress() {
@@ -144,12 +144,12 @@ public class Book {
         this.cover = cover;
     }
 
-    public Introduction getIntroduction() {
-        return introduction;
+    public Introduction getIntro() {
+        return intro;
     }
 
-    public void setIntroduction(Introduction introduction) {
-        this.introduction = introduction;
+    public void setIntro(Introduction intro) {
+        this.intro = intro;
     }
 
     @Override
