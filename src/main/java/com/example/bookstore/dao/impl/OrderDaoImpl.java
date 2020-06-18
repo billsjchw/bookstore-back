@@ -6,6 +6,10 @@ import com.example.bookstore.repository.CoverRepository;
 import com.example.bookstore.repository.IntroductionRepository;
 import com.example.bookstore.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -17,12 +21,50 @@ public class OrderDaoImpl implements OrderDao {
     @Autowired private IntroductionRepository introRepo;
 
     @Override
-    public List<Order> findAllByUserId(int userId) {
-        List<Order> orders = orderRepo.findAllByUserId(userId);
+    public Page<Order> orderSearch(String timePlacedStart, String timePlacedEnd, int page, int size) {
+        List<Order> orders = orderRepo.orderSearch(timePlacedStart,
+                timePlacedEnd, page, size);
+        int total = orderRepo.orderSearchCount(timePlacedStart, timePlacedEnd);
         for (Order order : orders)
-            for (OrderItem item : order.getItems())
-                completeBook(item.getBook());
-        return orders;
+            for (OrderItem orderItem : order.getItems())
+                completeBook(orderItem.getBook());
+        return new PageImpl<>(orders, PageRequest.of(page, size), total);
+    }
+
+    @Override
+    public Page<Order> orderFuzzySearch(String keyword, String timePlacedStart,
+                                        String timePlacedEnd, int page, int size) {
+        List<Order> orders = orderRepo.orderFuzzySearch(keyword,
+                timePlacedStart, timePlacedEnd, page, size);
+        int total = orderRepo.orderFuzzySearchCount(keyword, timePlacedStart, timePlacedEnd);
+        for (Order order : orders)
+            for (OrderItem orderItem : order.getItems())
+                completeBook(orderItem.getBook());
+        return new PageImpl<>(orders, PageRequest.of(page, size), total);
+    }
+
+    @Override
+    public Page<Order> orderSearchWithUserId(int userId, String timePlacedStart,
+                                             String timePlacedEnd, int page, int size) {
+        List<Order> orders = orderRepo.orderSearchWithUserId(userId,
+                timePlacedStart, timePlacedEnd, page, size);
+        int total = orderRepo.orderSearchWithUserIdCount(userId, timePlacedStart, timePlacedEnd);
+        for (Order order : orders)
+            for (OrderItem orderItem : order.getItems())
+                completeBook(orderItem.getBook());
+        return new PageImpl<>(orders, PageRequest.of(page, size), total);
+    }
+
+    @Override
+    public Page<Order> orderFuzzySearchWithUserId(int userId, String keyword, String timePlacedStart,
+                                                  String timePlacedEnd, int page, int size) {
+        List<Order> orders = orderRepo.orderFuzzySearchWithUserId(userId, keyword,
+                timePlacedStart, timePlacedEnd, page, size);
+        int total = orderRepo.orderFuzzySearchWithUserIdCount(userId, keyword, timePlacedStart, timePlacedEnd);
+        for (Order order : orders)
+            for (OrderItem orderItem : order.getItems())
+                completeBook(orderItem.getBook());
+        return new PageImpl<>(orders, PageRequest.of(page, size), total);
     }
 
     @Override

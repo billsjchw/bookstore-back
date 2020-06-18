@@ -10,7 +10,6 @@ import java.util.List;
 public interface BookDao {
     boolean existById(int id);
     Book findById(int id);
-    List<Book> findAll();
     Page<Book> findAll(Pageable pageable);
     Page<Book> findAll(Example<Book> example, Pageable pageable);
     void save(Book book);

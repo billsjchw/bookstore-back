@@ -32,14 +32,6 @@ public class BookDaoImpl implements BookDao {
     }
 
     @Override
-    public List<Book> findAll() {
-        List<Book> books = bookRepo.findAll();
-        for (Book book : books)
-            completeBook(book);
-        return books;
-    }
-
-    @Override
     public Page<Book> findAll(Pageable pageable) {
         Page<Book> books = bookRepo.findAll(pageable);
         for (Book book : books)

@@ -29,17 +29,11 @@ public class User implements UserDetails {
     @Column(name = "`password`")
     private String password;
 
-    @Basic
-    @Column(name = "`first_name`")
-    private String firstName;
-
-    @Basic
-    @Column(name = "`last_name`")
-    private String lastName;
-
-    @Basic
-    @Column(name = "`email`")
-    private String email;
+    @Embedded
+    @AttributeOverride(name = "firstName", column = @Column(name = "`first_name`"))
+    @AttributeOverride(name = "lastName", column = @Column(name = "`last_name`"))
+    @AttributeOverride(name = "email", column = @Column(name = "`email`"))
+    private Profile profile;
 
     @Basic
     @Column(name = "`enabled`")
@@ -84,24 +78,12 @@ public class User implements UserDetails {
         this.password = password;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public Profile getProfile() {
+        return profile;
     }
 
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
+    public void setProfile(Profile profile) {
+        this.profile = profile;
     }
 
     public Boolean getEnabled() {

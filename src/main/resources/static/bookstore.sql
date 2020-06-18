@@ -1,4 +1,4 @@
-set FOREIGN_KEY_CHECKS = 0;
+set foreign_key_checks = 0;
 
 drop table if exists `books`;
 create table `books` (
@@ -72,7 +72,7 @@ drop table if exists `cart_items`;
 create table `cart_items` (
     `cart` int,
     `book` int,
-    `amount` int not null check (`amount` > 0),
+    `amount` int not null check (`amount` > 0 and `amount` <= 200),
     `active` bool not null,
     primary key (`cart`, `book`),
     foreign key (`cart`) references `carts`(`id`) on delete cascade,
@@ -83,14 +83,12 @@ drop table if exists `orders`;
 create table `orders` (
     `id` int auto_increment,
     `user` int not null,
-    `status` enum('UNPAID', 'DELIVERING', 'DONE', 'CANCELLED') not null,
     `time_placed` timestamp not null,
-    `time_paid` timestamp null,
-    `time_finished` timestamp null,
     `consignee_address` varchar(255) not null,
     `consignee_phone` varchar(31) not null,
-    `consignee_fist_name` varchar(63) not null,
+    `consignee_first_name` varchar(63) not null,
     `consignee_last_name` varchar(63) not null,
+    `payment_method` enum('COD', 'ONLINE') null,
     primary key (`id`),
     foreign key (`user`) references `users`(`id`) on delete cascade
 );
@@ -99,10 +97,11 @@ drop table if exists `order_items`;
 create table `order_items` (
     `order` int,
     `book` int,
-    `amount` int not null check (`amount` > 0),
+    `amount` int not null check (`amount` > 0 and `amount` <= 200),
+    `price` int not null check (`price` >= 0),
     primary key (`order`, `book`),
     foreign key (`order`) references `orders`(`id`) on delete cascade,
-    foreign key (`book`) references `books`(`id`) on delete cascade
+    foreign key (`book`) references `books`(`id`) on delete restrict
 );
 
-set FOREIGN_KEY_CHECKS = 1;
+set foreign_key_checks = 1;

@@ -31,7 +31,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public Message findAllBooks(int page, int size) {
         Pageable pageable = PageRequest.of(page, size,
-                Sort.by(Sort.Order.asc("isbn")));
+                Sort.by(Sort.Order.asc("id")));
         Page<Book> books = bookDao.findAll(pageable);
         return new Message("SUCCESS", books);
     }
@@ -46,7 +46,7 @@ public class BookServiceImpl implements BookService {
                         .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
         );
         Pageable pageable = PageRequest.of(page, size,
-                Sort.by(Sort.Order.asc("isbn")));
+                Sort.by(Sort.Order.asc("id")));
         Page<Book> books = bookDao.findAll(example, pageable);
         return new Message("SUCCESS", books);
     }

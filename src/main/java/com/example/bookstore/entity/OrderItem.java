@@ -14,11 +14,16 @@ public class OrderItem {
     @Column(name = "`amount`")
     private Integer amount;
 
+    @Basic
+    @Column(name = "`price`")
+    private Integer price;
+
     public OrderItem() {}
 
-    public OrderItem(Book book, Integer amount) {
+    public OrderItem(Book book, int amount, int price) {
         this.book = book;
         this.amount = amount;
+        this.price = price;
     }
 
     public Book getBook() {
@@ -35,6 +40,14 @@ public class OrderItem {
 
     public void setAmount(Integer amount) {
         this.amount = amount;
+    }
+
+    public Integer getPrice() {
+        return price;
+    }
+
+    public void setPrice(Integer price) {
+        this.price = price;
     }
 
     @Override
