@@ -30,8 +30,8 @@ public class CartController {
         return cartService.editItemInMyCart(cartItem);
     }
 
-    @GetMapping(value = "/cart/remove-item-from-my-cart")
-    Message removeItemFromMyCart(@RequestParam(value = "book-id") int bookId) {
-        return cartService.removeItemFromMyCart(bookId);
+    @GetMapping(value = "/cart/delete-item-from-my-cart")
+    Message deleteItemFromMyCart(@RequestParam(value = "book-id") int bookId) {
+        return cartService.deleteItemFromMyCart(bookId);
     }
 }

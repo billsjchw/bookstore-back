@@ -31,4 +31,7 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
 
     @Query(value = "call `OrderFuzzySearchWithUserIdCount`(?1, ?2, ?3, ?4)", nativeQuery = true)
     int orderFuzzySearchWithUserIdCount(int userId, String keyword, String timePlacedStart, String timePlacedEnd);
+
+    @Query(value = "call `BookIsOrdered`(?1)", nativeQuery = true)
+    int bookIsOrdered(int bookId);
 }

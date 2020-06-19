@@ -9,5 +9,6 @@ public interface OrderDao {
     Page<Order> orderSearchWithUserId(int userId, String timePlacedStart, String timePlacedEnd, int page, int size);
     Page<Order> orderFuzzySearchWithUserId(int userId, String keyword, String timePlacedStart,
                                            String timePlacedEnd, int page, int size);
+    boolean bookIsOrdered(int bookId);
     void save(Order order);
 }

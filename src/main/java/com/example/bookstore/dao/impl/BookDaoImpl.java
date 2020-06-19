@@ -8,10 +8,10 @@ import com.example.bookstore.repository.BookRepository;
 import com.example.bookstore.repository.CoverRepository;
 import com.example.bookstore.repository.IntroductionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 @Repository
 public class BookDaoImpl implements BookDao {
@@ -48,15 +48,25 @@ public class BookDaoImpl implements BookDao {
     }
 
     @Override
-    public void save(Book book) {
+    public Book saveAndFlush(Book book) {
+        Cover cover = book.getCover();
+        Introduction intro = book.getIntro();
         book = bookRepo.saveAndFlush(book);
         int bookId = book.getId();
-        Cover cover = book.getCover();
         cover.setBookId(bookId);
-        Introduction intro = book.getIntro();
         intro.setBookId(bookId);
         coverRepo.save(cover);
         introRepo.save(intro);
+        book.setCover(cover);
+        book.setIntro(intro);
+        return book;
+    }
+
+    @Override
+    public void deleteById(int id) {
+        bookRepo.deleteById(id);
+        coverRepo.deleteById(id);
+        introRepo.deleteById(id);
     }
 
     private void completeBook(Book book) {

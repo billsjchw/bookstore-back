@@ -32,4 +32,14 @@ public class BookController {
     Message addBook(@RequestBody Book book) {
         return bookService.addBook(book);
     }
+
+    @PostMapping("/book/edit-book")
+    Message editBook(@RequestBody Book book) {
+        return bookService.editBook(book);
+    }
+
+    @GetMapping("/book/delete-book-by-id")
+    Message deleteBookById(@RequestParam(value = "id") int id) {
+        return bookService.deleteBookById(id);
+    }
 }

@@ -8,4 +8,6 @@ public interface BookService {
     Message findAllBooks(int page, int size);
     Message BookFuzzySearch(String keyword, int page, int size);
     Message addBook(Book book);
+    Message editBook(Book book);
+    Message deleteBookById(int id);
 }

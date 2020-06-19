@@ -10,7 +10,7 @@ import java.util.Objects;
 @Table(name = "`authorities`")
 @Access(value = AccessType.FIELD)
 public class Authority implements GrantedAuthority {
-    public enum AuthorityId {BOOK_ADMIN, USER_ADMIN, ORDER_ADMIN};
+    public enum AuthorityId {DUMMY, BOOK_ADMIN, USER_ADMIN, ORDER_ADMIN};
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

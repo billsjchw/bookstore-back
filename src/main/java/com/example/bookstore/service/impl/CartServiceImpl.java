@@ -78,7 +78,7 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public Message removeItemFromMyCart(int bookId) {
+    public Message deleteItemFromMyCart(int bookId) {
         User user = (User) SecurityContextHolder.getContext()
                 .getAuthentication().getPrincipal();
         Cart cart = cartDao.findOneByUserId(user.getId());

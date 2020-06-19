@@ -139,3 +139,11 @@ begin
           `time_placed` <= `time_placed_end`;
 end//
 delimiter ;
+
+delimiter //
+drop procedure if exists `BookIsOrdered`;
+create procedure `BookIsOrdered`(`book` int)
+begin
+    select exists(select * from `order_items` where `order_items`.`book` = `book`);
+end//
+delimiter ;

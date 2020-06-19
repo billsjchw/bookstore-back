@@ -42,7 +42,7 @@ public class OrderServiceImpl implements OrderService {
         for (CartItem cartItem : activeCartItems) {
             Book book = cartItem.getBook();
             book.setStock(book.getStock() - cartItem.getAmount());
-            bookDao.save(book);
+            bookDao.saveAndFlush(book);
         }
         Set<OrderItem> orderItems = new HashSet<>();
         for (CartItem cartItem : activeCartItems) {

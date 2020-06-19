@@ -8,5 +8,5 @@ public interface CartService {
     Message findItemInMyCart(int bookId);
     Message findMyCart();
     Message editItemInMyCart(CartItem cartItem);
-    Message removeItemFromMyCart(int bookId);
+    Message deleteItemFromMyCart(int bookId);
 }
