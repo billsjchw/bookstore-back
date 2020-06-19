@@ -4,6 +4,7 @@ import com.example.bookstore.dao.BookDao;
 import com.example.bookstore.dao.CartDao;
 import com.example.bookstore.dao.OrderDao;
 import com.example.bookstore.entity.*;
+import com.example.bookstore.misc.BookstoreUserDetails;
 import com.example.bookstore.service.OrderService;
 import com.example.bookstore.util.Message;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +25,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Message orderItemsInMyCart(Consignee consignee, String paymentMethod) {
-        User user = (User) SecurityContextHolder.getContext()
-                .getAuthentication().getPrincipal();
+        User user = ((BookstoreUserDetails) SecurityContextHolder.getContext()
+                .getAuthentication().getPrincipal()).getUser();
         Cart cart = cartDao.findOneByUserId(user.getId());
         Set<CartItem> activeCartItems = new HashSet<>();
         Set<CartItem> inactiveCartItems = new HashSet<>();
@@ -61,8 +62,8 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Message orderSearch(String timePlacedStart, String timePlacedEnd,
                                int page, int size) {
-        User user = (User) SecurityContextHolder.getContext()
-                .getAuthentication().getPrincipal();
+        User user = ((BookstoreUserDetails) SecurityContextHolder.getContext()
+                .getAuthentication().getPrincipal()).getUser();
         if (!user.getAuthorities().contains(new Authority(Authority.AuthorityId.ORDER_ADMIN)))
             return new Message("REJECTED", null);
         Page<Order> orders = orderDao.orderSearch(timePlacedStart,
@@ -73,8 +74,8 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Message orderFuzzySearch(String keyword, String timePlacedStart,
                                     String timePlacedEnd, int page, int size) {
-        User user = (User) SecurityContextHolder.getContext()
-                .getAuthentication().getPrincipal();
+        User user = ((BookstoreUserDetails) SecurityContextHolder.getContext()
+                .getAuthentication().getPrincipal()).getUser();
         if (!user.getAuthorities().contains(new Authority(Authority.AuthorityId.ORDER_ADMIN)))
             return new Message("REJECTED", null);
         Page<Order> orders = orderDao.orderFuzzySearch(keyword,
@@ -85,8 +86,8 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Message myOrderSearch(String timePlacedStart, String timePlacedEnd,
                                  int page, int size) {
-        User user = (User) SecurityContextHolder.getContext()
-                .getAuthentication().getPrincipal();
+        User user = ((BookstoreUserDetails) SecurityContextHolder.getContext()
+                .getAuthentication().getPrincipal()).getUser();
         Page<Order> orders = orderDao.orderSearchWithUserId(user.getId(),
                 timePlacedStart, timePlacedEnd, page, size);
         return new Message("SUCCESS", orders);
@@ -95,8 +96,8 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Message myOrderFuzzySearch(String keyword, String timePlacedStart,
                                       String timePlacedEnd, int page, int size) {
-        User user = (User) SecurityContextHolder.getContext()
-                .getAuthentication().getPrincipal();
+        User user = ((BookstoreUserDetails) SecurityContextHolder.getContext()
+                .getAuthentication().getPrincipal()).getUser();
         Page<Order> orders = orderDao.orderFuzzySearchWithUserId(user.getId(),
                 keyword, timePlacedStart, timePlacedEnd, page, size);
         return new Message("SUCCESS", orders);

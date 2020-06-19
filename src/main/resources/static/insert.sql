@@ -12,7 +12,16 @@ values ('9780131872486', 'Thinking in Java (Fourth Edition)', 'Bruce Eckel', 'En
 
 insert into `users`(`username`, `password`, `first_name`, `last_name`, `email`, `enabled`)
 values ('bill', '1234', 'William', 'Adams', 'bill@example.com', true),
-       ('tom', '1234', 'Thomas', 'Clark', 'tom@example', false);
+       ('tom', '1234', 'Thomas', 'Clark', 'tom@example.com', false);
 
 insert into `carts`(`user`)
 values (2), (3);
+
+insert into `orders`(`user`, `time_placed`, `consignee_first_name`, `consignee_last_name`, `consignee_address`, `consignee_phone`, `payment_method`)
+values (2, '2020-05-01 12:00:00', 'William', 'Adams', 'Shanghai Jiao Tong University', '12312341234', 'COD'),
+       (3, '2020-01-01 12:00:00', 'Thomas', 'Clark', 'Shanghai Jiao Tong University', '12312341234', 'ONLINE');
+
+insert into order_items(`order`, `book`, `amount`, `price`)
+values (1, 1, 3, 51800),
+       (1, 3, 5, 169100),
+       (2, 5, 2, 33790);

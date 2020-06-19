@@ -1,6 +1,7 @@
 package com.example.bookstore.service.impl;
 
 import com.example.bookstore.entity.User;
+import com.example.bookstore.misc.BookstoreUserDetails;
 import com.example.bookstore.service.LoginService;
 import com.example.bookstore.util.Message;
 import org.springframework.security.core.GrantedAuthority;
@@ -15,8 +16,8 @@ import java.util.Collection;
 public class LoginServiceImpl implements LoginService {
     @Override
     public Message login() {
-        User user = (User) SecurityContextHolder.getContext()
-                .getAuthentication().getPrincipal();
+        User user = ((BookstoreUserDetails) SecurityContextHolder.getContext()
+                .getAuthentication().getPrincipal()).getUser();
         return new Message("SUCCESS", user);
     }
 }

@@ -5,6 +5,7 @@ import com.example.bookstore.dao.OrderDao;
 import com.example.bookstore.entity.Authority;
 import com.example.bookstore.entity.Book;
 import com.example.bookstore.entity.User;
+import com.example.bookstore.misc.BookstoreUserDetails;
 import com.example.bookstore.service.BookService;
 import com.example.bookstore.util.Message;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,8 +53,8 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Message addBook(Book book) {
-        User user = (User) SecurityContextHolder.getContext()
-                .getAuthentication().getPrincipal();
+        User user = ((BookstoreUserDetails) SecurityContextHolder.getContext()
+                .getAuthentication().getPrincipal()).getUser();
         if (!user.getAuthorities().contains(new Authority(Authority.AuthorityId.BOOK_ADMIN)))
             return new Message("REJECTED", null);
         book = bookDao.saveAndFlush(book);
@@ -62,11 +63,11 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Message editBook(Book book) {
-        User user = (User) SecurityContextHolder.getContext()
-                .getAuthentication().getPrincipal();
+        User user = ((BookstoreUserDetails) SecurityContextHolder.getContext()
+                .getAuthentication().getPrincipal()).getUser();
         if (!user.getAuthorities().contains(new Authority(Authority.AuthorityId.BOOK_ADMIN)))
             return new Message("REJECTED", null);
-        if (!bookDao.existById(book.getId()))
+        if (!bookDao.existsById(book.getId()))
             return new Message("BOOK_NOT_FOUND", null);
         bookDao.saveAndFlush(book);
         return new Message("SUCCESS", null);
@@ -74,13 +75,13 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Message deleteBookById(int id) {
-        User user = (User) SecurityContextHolder.getContext()
-                .getAuthentication().getPrincipal();
+        User user = ((BookstoreUserDetails) SecurityContextHolder.getContext()
+                .getAuthentication().getPrincipal()).getUser();
         if (!user.getAuthorities().contains(new Authority(Authority.AuthorityId.BOOK_ADMIN)))
             return new Message("REJECTED", null);
         if (orderDao.bookIsOrdered(id))
             return new Message("BOOK_IS_ORDERED", null);
-        if (bookDao.existById(id))
+        if (bookDao.existsById(id))
             bookDao.deleteById(id);
         return new Message("SUCCESS", null);
     }

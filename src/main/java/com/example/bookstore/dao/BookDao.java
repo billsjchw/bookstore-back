@@ -6,7 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface BookDao {
-    boolean existById(int id);
+    boolean existsById(int id);
     Book findById(int id);
     Page<Book> findAll(Pageable pageable);
     Page<Book> findAll(Example<Book> example, Pageable pageable);

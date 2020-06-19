@@ -6,6 +6,7 @@ import com.example.bookstore.entity.Book;
 import com.example.bookstore.entity.Cart;
 import com.example.bookstore.entity.CartItem;
 import com.example.bookstore.entity.User;
+import com.example.bookstore.misc.BookstoreUserDetails;
 import com.example.bookstore.service.CartService;
 import com.example.bookstore.util.Message;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +22,9 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public Message addBookToMyCart(int bookId) {
-        User user = (User) SecurityContextHolder.getContext()
-                .getAuthentication().getPrincipal();
-        if (!bookDao.existById(bookId))
+        User user = ((BookstoreUserDetails) SecurityContextHolder.getContext()
+                .getAuthentication().getPrincipal()).getUser();
+        if (!bookDao.existsById(bookId))
             return new Message("BOOK_NOT_FOUND", null);
         Cart cart = cartDao.findOneByUserId(user.getId());
         CartItem oldCartItem = cart.getItem(bookId);
@@ -42,8 +43,8 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public Message findItemInMyCart(int bookId) {
-        User user = (User) SecurityContextHolder.getContext()
-                .getAuthentication().getPrincipal();
+        User user = ((BookstoreUserDetails) SecurityContextHolder.getContext()
+                .getAuthentication().getPrincipal()).getUser();
         Cart cart = cartDao.findOneByUserId(user.getId());
         CartItem cartItem = cart.getItem(bookId);
         if (cartItem == null)
@@ -54,16 +55,16 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public Message findMyCart() {
-        User user = (User) SecurityContextHolder.getContext()
-                .getAuthentication().getPrincipal();
+        User user = ((BookstoreUserDetails) SecurityContextHolder.getContext()
+                .getAuthentication().getPrincipal()).getUser();
         Cart cart = cartDao.findOneByUserId(user.getId());
         return new Message("SUCCESS", cart);
     }
 
     @Override
     public Message editItemInMyCart(CartItem cartItem) {
-        User user = (User) SecurityContextHolder.getContext()
-                .getAuthentication().getPrincipal();
+        User user = ((BookstoreUserDetails) SecurityContextHolder.getContext()
+                .getAuthentication().getPrincipal()).getUser();
         Cart cart = cartDao.findOneByUserId(user.getId());
         if (!cart.getItems().contains(cartItem))
             return new Message("ITEM_NOT_FOUND", null);
@@ -79,8 +80,8 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public Message deleteItemFromMyCart(int bookId) {
-        User user = (User) SecurityContextHolder.getContext()
-                .getAuthentication().getPrincipal();
+        User user = ((BookstoreUserDetails) SecurityContextHolder.getContext()
+                .getAuthentication().getPrincipal()).getUser();
         Cart cart = cartDao.findOneByUserId(user.getId());
         cart.getItems().remove(new CartItem(new Book(bookId), 1, true));
         cartDao.save(cart);

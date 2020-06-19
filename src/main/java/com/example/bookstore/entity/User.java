@@ -2,11 +2,8 @@ package com.example.bookstore.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -14,7 +11,7 @@ import java.util.Set;
 @Entity
 @Table(name = "`users`")
 @Access(value = AccessType.FIELD)
-public class User implements UserDetails {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic
@@ -50,6 +47,12 @@ public class User implements UserDetails {
     @Transient
     private Avatar avatar;
 
+    public User() {}
+
+    public User(String username) {
+        this.username = username;
+    }
+
     public Integer getId() {
         return id;
     }
@@ -58,7 +61,6 @@ public class User implements UserDetails {
         this.id = id;
     }
 
-    @Override
     public String getUsername() {
         return username;
     }
@@ -67,7 +69,6 @@ public class User implements UserDetails {
         this.username = username;
     }
 
-    @Override
     @JsonIgnore
     public String getPassword() {
         return password;
@@ -110,6 +111,13 @@ public class User implements UserDetails {
         this.avatar = avatar;
     }
 
+    public Set<Authority> getAuthorities() {
+        Set<Authority> authorities = new HashSet<>();
+        for (Role role : roles)
+            authorities.addAll(role.getAuthorities());
+        return authorities;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -121,38 +129,5 @@ public class User implements UserDetails {
     @Override
     public int hashCode() {
         return Objects.hash(id);
-    }
-
-    @Override
-    @JsonIgnore
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        Set<Authority> authorities = new HashSet<>();
-        for (Role role : roles)
-            authorities.addAll(role.getAuthorities());
-        return authorities;
-    }
-
-    @Override
-    @JsonIgnore
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    @JsonIgnore
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    @JsonIgnore
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    @JsonIgnore
-    public boolean isEnabled() {
-        return enabled;
     }
 }

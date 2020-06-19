@@ -20,7 +20,7 @@ public class BookDaoImpl implements BookDao {
     @Autowired private IntroductionRepository introRepo;
 
     @Override
-    public boolean existById(int id) {
+    public boolean existsById(int id) {
         return bookRepo.existsById(id);
     }
 
@@ -64,6 +64,8 @@ public class BookDaoImpl implements BookDao {
 
     @Override
     public void deleteById(int id) {
+        if (!bookRepo.existsById(id))
+            return;
         bookRepo.deleteById(id);
         coverRepo.deleteById(id);
         introRepo.deleteById(id);
