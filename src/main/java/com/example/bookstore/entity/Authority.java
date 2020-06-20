@@ -10,15 +10,30 @@ import java.util.Objects;
 @Table(name = "`authorities`")
 @Access(value = AccessType.FIELD)
 public class Authority implements GrantedAuthority {
+    public enum AuthorityId {DUMMY, BOOK_ADMIN, USER_ADMIN, ORDER_ADMIN};
+
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic
+    @Column(name = "`id`")
+    private Integer id;
+
     @Basic
     @Column(name = "`name`")
     private String name;
 
     public Authority() {}
 
-    public Authority(String name) {
-        this.name = name;
+    public Authority(AuthorityId id) {
+        this.id = id.ordinal();
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -34,12 +49,12 @@ public class Authority implements GrantedAuthority {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Authority authority = (Authority) o;
-        return name.equals(authority.name);
+        return id.equals(authority.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name);
+        return Objects.hash(id);
     }
 
     @Override

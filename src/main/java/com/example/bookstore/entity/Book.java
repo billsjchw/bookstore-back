@@ -9,8 +9,13 @@ import java.util.Objects;
 @Access(value = AccessType.FIELD)
 public class Book {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic
-    @Column(name = "isbn")
+    @Column(name = "`id`")
+    private Integer id;
+
+    @Basic
+    @Column(name = "`isbn`")
     private String isbn;
 
     @Basic
@@ -22,8 +27,8 @@ public class Book {
     private String author;
 
     @Basic
-    @Column(name = "`language`")
-    private String language;
+    @Column(name = "`lang`")
+    private String lang;
 
     @Basic
     @Column(name = "`press`")
@@ -45,18 +50,26 @@ public class Book {
     private Cover cover;
 
     @Transient
-    private Introduction introduction;
+    private Introduction intro;
 
     public Book() {}
 
-    public Book(String isbn) {
-        this.isbn = isbn;
+    public Book(int id) {
+        this.id = id;
     }
 
     public Book(String title, String author, String press) {
         this.title = title;
         this.author = author;
         this.press = press;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getIsbn() {
@@ -83,12 +96,12 @@ public class Book {
         this.author = author;
     }
 
-    public String getLanguage() {
-        return language;
+    public String getLang() {
+        return lang;
     }
 
-    public void setLanguage(String language) {
-        this.language = language;
+    public void setLang(String language) {
+        this.lang = language;
     }
 
     public String getPress() {
@@ -131,12 +144,12 @@ public class Book {
         this.cover = cover;
     }
 
-    public Introduction getIntroduction() {
-        return introduction;
+    public Introduction getIntro() {
+        return intro;
     }
 
-    public void setIntroduction(Introduction introduction) {
-        this.introduction = introduction;
+    public void setIntro(Introduction intro) {
+        this.intro = intro;
     }
 
     @Override
@@ -144,11 +157,11 @@ public class Book {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Book book = (Book) o;
-        return isbn.equals(book.isbn);
+        return id.equals(book.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(isbn);
+        return Objects.hash(id);
     }
 }

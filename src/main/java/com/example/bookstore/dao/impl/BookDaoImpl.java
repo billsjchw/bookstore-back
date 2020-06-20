@@ -8,40 +8,32 @@ import com.example.bookstore.repository.BookRepository;
 import com.example.bookstore.repository.CoverRepository;
 import com.example.bookstore.repository.IntroductionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 @Repository
 public class BookDaoImpl implements BookDao {
-    @Autowired private BookRepository bookRepository;
-    @Autowired private CoverRepository coverRepository;
-    @Autowired private IntroductionRepository introductionRepository;
+    @Autowired private BookRepository bookRepo;
+    @Autowired private CoverRepository coverRepo;
+    @Autowired private IntroductionRepository introRepo;
 
     @Override
-    public boolean existByIsbn(String isbn) {
-        return bookRepository.existsById(isbn);
+    public boolean existsById(int id) {
+        return bookRepo.existsById(id);
     }
 
     @Override
-    public Book findByIsbn(String isbn) {
-        Book book = bookRepository.findById(isbn).orElse(null);
+    public Book findById(int id) {
+        Book book = bookRepo.findById(id).orElse(null);
         completeBook(book);
         return book;
     }
 
     @Override
-    public List<Book> findAll() {
-        List<Book> books = bookRepository.findAll();
-        for (Book book : books)
-            completeBook(book);
-        return books;
-    }
-
-    @Override
     public Page<Book> findAll(Pageable pageable) {
-        Page<Book> books = bookRepository.findAll(pageable);
+        Page<Book> books = bookRepo.findAll(pageable);
         for (Book book : books)
             completeBook(book);
         return books;
@@ -49,28 +41,43 @@ public class BookDaoImpl implements BookDao {
 
     @Override
     public Page<Book> findAll(Example<Book> example, Pageable pageable) {
-        Page<Book> books = bookRepository.findAll(example, pageable);
+        Page<Book> books = bookRepo.findAll(example, pageable);
         for (Book book : books)
             completeBook(book);
         return books;
     }
 
     @Override
-    public void save(Book book) {
+    public Book saveAndFlush(Book book) {
         Cover cover = book.getCover();
-        Introduction introduction = book.getIntroduction();
-        bookRepository.save(book);
-        coverRepository.save(cover);
-        introductionRepository.save(introduction);
+        Introduction intro = book.getIntro();
+        book = bookRepo.saveAndFlush(book);
+        int bookId = book.getId();
+        cover.setBookId(bookId);
+        intro.setBookId(bookId);
+        coverRepo.save(cover);
+        introRepo.save(intro);
+        book.setCover(cover);
+        book.setIntro(intro);
+        return book;
+    }
+
+    @Override
+    public void deleteById(int id) {
+        if (!bookRepo.existsById(id))
+            return;
+        bookRepo.deleteById(id);
+        coverRepo.deleteById(id);
+        introRepo.deleteById(id);
     }
 
     private void completeBook(Book book) {
         if (book == null)
             return;
-        String isbn = book.getIsbn();
-        Cover cover = coverRepository.findById(isbn).orElse(null);
-        Introduction introduction = introductionRepository.findById(isbn).orElse(null);
+        int bookId = book.getId();
+        Cover cover = coverRepo.findById(bookId).orElse(null);
+        Introduction intro = introRepo.findById(bookId).orElse(null);
         book.setCover(cover);
-        book.setIntroduction(introduction);
+        book.setIntro(intro);
     }
 }

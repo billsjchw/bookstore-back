@@ -5,14 +5,14 @@ import com.example.bookstore.dao.CartDao;
 import com.example.bookstore.entity.Book;
 import com.example.bookstore.entity.Cart;
 import com.example.bookstore.entity.CartItem;
+import com.example.bookstore.entity.User;
+import com.example.bookstore.misc.BookstoreUserDetails;
 import com.example.bookstore.service.CartService;
 import com.example.bookstore.util.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Set;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -21,31 +21,69 @@ public class CartServiceImpl implements CartService {
     @Autowired private BookDao bookDao;
 
     @Override
+    public Message addBookToMyCart(int bookId) {
+        User user = ((BookstoreUserDetails) SecurityContextHolder.getContext()
+                .getAuthentication().getPrincipal()).getUser();
+        if (!bookDao.existsById(bookId))
+            return new Message("BOOK_NOT_FOUND", null);
+        Cart cart = cartDao.findOneByUserId(user.getId());
+        CartItem oldCartItem = cart.getItem(bookId);
+        Book book = new Book(bookId);
+        int amount = oldCartItem == null ? 1 : oldCartItem.getAmount() + 1;
+        boolean active = oldCartItem == null ? true : oldCartItem.getActive();
+        if (amount > CartItem.MAX_AMOUNT)
+            return new Message("MAX_AMOUNT_EXCEEDED", null);
+        CartItem newCartItem = new CartItem(book, amount, active);
+        if (oldCartItem != null)
+            cart.getItems().remove(oldCartItem);
+        cart.getItems().add(newCartItem);
+        cartDao.save(cart);
+        return new Message("SUCCESS", newCartItem);
+    }
+
+    @Override
+    public Message findItemInMyCart(int bookId) {
+        User user = ((BookstoreUserDetails) SecurityContextHolder.getContext()
+                .getAuthentication().getPrincipal()).getUser();
+        Cart cart = cartDao.findOneByUserId(user.getId());
+        CartItem cartItem = cart.getItem(bookId);
+        if (cartItem == null)
+            return new Message("ITEM_NOT_FOUND", null);
+        else
+            return new Message("SUCCESS", cartItem);
+    }
+
+    @Override
     public Message findMyCart() {
-        String username = SecurityContextHolder.getContext()
-                .getAuthentication().getName();
-        Cart cart = cartDao.findOneByUsername(username);
+        User user = ((BookstoreUserDetails) SecurityContextHolder.getContext()
+                .getAuthentication().getPrincipal()).getUser();
+        Cart cart = cartDao.findOneByUserId(user.getId());
         return new Message("SUCCESS", cart);
     }
 
     @Override
-    public Message addToCart(String isbn, int increment) {
-        String username = SecurityContextHolder.getContext()
-                .getAuthentication().getName();
-        if (!bookDao.existByIsbn(isbn))
-            return new Message("BOOK_NOT_FOUND", null);
-        Cart cart = cartDao.findOneByUsername(username);
-        Set<CartItem> items = cart.getItems();
-        for (CartItem item : items)
-            if (item.getBook().getIsbn().equals(isbn)) {
-                int amount = item.getAmount();
-                if (amount + increment < 0)
-                    return new Message("OVERFLOW", null);
-                item.setAmount(amount + increment);
-                cartDao.save(cart);
-                return new Message("SUCCESS", null);
-            }
-        items.add(new CartItem(new Book(isbn), increment));
+    public Message editItemInMyCart(CartItem cartItem) {
+        User user = ((BookstoreUserDetails) SecurityContextHolder.getContext()
+                .getAuthentication().getPrincipal()).getUser();
+        Cart cart = cartDao.findOneByUserId(user.getId());
+        if (!cart.getItems().contains(cartItem))
+            return new Message("ITEM_NOT_FOUND", null);
+        if (cartItem.getAmount() < CartItem.MIN_AMOUNT)
+            return new Message("MIN_AMOUNT_EXCEEDED", null);
+        if (cartItem.getAmount() > CartItem.MAX_AMOUNT)
+            return new Message("MAX_AMOUNT_EXCEEDED", null);
+        cart.getItems().remove(cartItem);
+        cart.getItems().add(cartItem);
+        cartDao.save(cart);
+        return new Message("SUCCESS", null);
+    }
+
+    @Override
+    public Message deleteItemFromMyCart(int bookId) {
+        User user = ((BookstoreUserDetails) SecurityContextHolder.getContext()
+                .getAuthentication().getPrincipal()).getUser();
+        Cart cart = cartDao.findOneByUserId(user.getId());
+        cart.getItems().remove(new CartItem(new Book(bookId), 1, true));
         cartDao.save(cart);
         return new Message("SUCCESS", null);
     }

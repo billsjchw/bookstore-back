@@ -10,13 +10,13 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class CartDaoImpl implements CartDao {
-    @Autowired private CartRepository cartRepository;
-    @Autowired private CoverRepository coverRepository;
-    @Autowired private IntroductionRepository introductionRepository;
+    @Autowired private CartRepository cartRepo;
+    @Autowired private CoverRepository coverRepo;
+    @Autowired private IntroductionRepository introRepo;
 
     @Override
-    public Cart findOneByUsername(String username) {
-        Cart cart = cartRepository.findOneByUsername(username).orElse(null);
+    public Cart findOneByUserId(int userId) {
+        Cart cart = cartRepo.findOneByUserId(userId).orElse(null);
         if (cart == null)
             return null;
         for (CartItem item : cart.getItems())
@@ -26,22 +26,16 @@ public class CartDaoImpl implements CartDao {
 
     @Override
     public void save(Cart cart) {
-        cartRepository.save(cart);
+        cartRepo.save(cart);
     }
-
-    @Override
-    public void delete(Cart cart) {
-        cartRepository.delete(cart);
-    }
-
 
     private void completeBook(Book book) {
         if (book == null)
             return;
-        String isbn = book.getIsbn();
-        Cover cover = coverRepository.findById(isbn).orElse(null);
-        Introduction introduction = introductionRepository.findById(isbn).orElse(null);
+        int bookId = book.getId();
+        Cover cover = coverRepo.findById(bookId).orElse(null);
+        Introduction intro = introRepo.findById(bookId).orElse(null);
         book.setCover(cover);
-        book.setIntroduction(introduction);
+        book.setIntro(intro);
     }
 }

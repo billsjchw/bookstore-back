@@ -3,27 +3,10 @@ package com.example.bookstore.entity;
 import javax.persistence.Embeddable;
 
 @Embeddable
-public class Consignee {
-    private String address;
-    private String phone;
+public class Profile {
     private String firstName;
     private String lastName;
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
+    private String email;
 
     public String getFirstName() {
         return firstName;
@@ -39,5 +22,13 @@ public class Consignee {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

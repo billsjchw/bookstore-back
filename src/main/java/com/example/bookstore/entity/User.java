@@ -2,11 +2,8 @@ package com.example.bookstore.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -14,8 +11,13 @@ import java.util.Set;
 @Entity
 @Table(name = "`users`")
 @Access(value = AccessType.FIELD)
-public class User implements UserDetails {
+public class User {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic
+    @Column(name = "`id`")
+    private Integer id;
+
     @Basic
     @Column(name = "`username`")
     private String username;
@@ -24,17 +26,11 @@ public class User implements UserDetails {
     @Column(name = "`password`")
     private String password;
 
-    @Basic
-    @Column(name = "`first_name`")
-    private String firstName;
-
-    @Basic
-    @Column(name = "`last_name`")
-    private String lastName;
-
-    @Basic
-    @Column(name = "`email`")
-    private String email;
+    @Embedded
+    @AttributeOverride(name = "firstName", column = @Column(name = "`first_name`"))
+    @AttributeOverride(name = "lastName", column = @Column(name = "`last_name`"))
+    @AttributeOverride(name = "email", column = @Column(name = "`email`"))
+    private Profile profile;
 
     @Basic
     @Column(name = "`enabled`")
@@ -43,15 +39,28 @@ public class User implements UserDetails {
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
     @JoinTable(
             name = "`user_role`",
-            joinColumns = @JoinColumn(name = "`user`", referencedColumnName = "`username`"),
-            inverseJoinColumns = @JoinColumn(name = "`role`", referencedColumnName = "`name`")
+            joinColumns = @JoinColumn(name = "`user`", referencedColumnName = "`id`"),
+            inverseJoinColumns = @JoinColumn(name = "`role`", referencedColumnName = "`id`")
     )
     private Set<Role> roles;
 
     @Transient
     private Avatar avatar;
 
-    @Override
+    public User() {}
+
+    public User(String username) {
+        this.username = username;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     public String getUsername() {
         return username;
     }
@@ -60,7 +69,6 @@ public class User implements UserDetails {
         this.username = username;
     }
 
-    @Override
     @JsonIgnore
     public String getPassword() {
         return password;
@@ -71,24 +79,12 @@ public class User implements UserDetails {
         this.password = password;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public Profile getProfile() {
+        return profile;
     }
 
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
+    public void setProfile(Profile profile) {
+        this.profile = profile;
     }
 
     public Boolean getEnabled() {
@@ -115,21 +111,7 @@ public class User implements UserDetails {
         this.avatar = avatar;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return username.equals(user.username);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(username);
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
+    public Set<Authority> getAuthorities() {
         Set<Authority> authorities = new HashSet<>();
         for (Role role : roles)
             authorities.addAll(role.getAuthorities());
@@ -137,22 +119,15 @@ public class User implements UserDetails {
     }
 
     @Override
-    public boolean isAccountNonExpired() {
-        return true;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return id.equals(user.id);
     }
 
     @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return enabled;
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

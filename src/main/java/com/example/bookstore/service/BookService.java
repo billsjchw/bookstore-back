@@ -4,8 +4,10 @@ import com.example.bookstore.entity.Book;
 import com.example.bookstore.util.Message;
 
 public interface BookService {
-    Message findBookByIsbn(String isbn);
+    Message findBookById(int id);
     Message findAllBooks(int page, int size);
     Message BookFuzzySearch(String keyword, int page, int size);
     Message addBook(Book book);
+    Message editBook(Book book);
+    Message deleteBookById(int id);
 }

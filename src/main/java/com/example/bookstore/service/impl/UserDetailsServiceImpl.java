@@ -2,6 +2,7 @@ package com.example.bookstore.service.impl;
 
 import com.example.bookstore.dao.UserDao;
 import com.example.bookstore.entity.User;
+import com.example.bookstore.misc.BookstoreUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,9 +19,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userDao.findByUsername(username);
+        User user = userDao.findOneByUsername(username);
         if (user == null)
             throw new UsernameNotFoundException("");
-        return user;
+        return new BookstoreUserDetails(user);
     }
 }

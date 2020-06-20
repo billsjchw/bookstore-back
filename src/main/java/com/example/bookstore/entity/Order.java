@@ -2,6 +2,7 @@ package com.example.bookstore.entity;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -12,33 +13,26 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic
     @Column(name = "`id`")
-    private Long id;
-
-    @Basic
-    @Column(name = "`user`")
-    private String username;
+    private Integer id;
 
     @Embedded
-    @AttributeOverride(name = "address", column = @Column(name = "`address`"))
-    @AttributeOverride(name = "phone", column = @Column(name = "`phone`"))
-    @AttributeOverride(name = "name", column = @Column(name = "`name`"))
+    @AttributeOverride(name = "address", column = @Column(name = "`consignee_address`"))
+    @AttributeOverride(name = "phone", column = @Column(name = "`consignee_phone`"))
+    @AttributeOverride(name = "firstName", column = @Column(name = "`consignee_first_name`"))
+    @AttributeOverride(name = "lastName", column = @Column(name = "`consignee_last_name`"))
     private Consignee consignee;
-
-    @Basic
-    @Column(name = "`status`")
-    private String status;
 
     @Basic
     @Column(name = "`time_placed`")
     private Timestamp timePlaced;
 
     @Basic
-    @Column(name = "`time_paid`")
-    private Timestamp timePaid;
+    @Column(name = "`payment_method`")
+    private String paymentMethod;
 
-    @Basic
-    @Column(name = "`time_done`")
-    private Timestamp timeDone;
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
+    @JoinColumn(name = "`user`", referencedColumnName = "`id`")
+    private User user;
 
     @ElementCollection
     @CollectionTable(
@@ -49,28 +43,28 @@ public class Order {
 
     public Order() {}
 
-    public Order(String username, Consignee consignee, Set<OrderItem> items) {
-        this.username = username;
+    public Order(User user, Consignee consignee, String paymentMethod, Set<OrderItem> items) {
+        this.user = user;
         this.consignee = consignee;
+        this.paymentMethod = paymentMethod;
         this.items = items;
-        this.status = "UNPAID";
         this.timePlaced = new Timestamp(System.currentTimeMillis());
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
+    public User getUser() {
+        return user;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public Consignee getConsignee() {
@@ -81,14 +75,6 @@ public class Order {
         this.consignee = consignee;
     }
 
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
     public Timestamp getTimePlaced() {
         return timePlaced;
     }
@@ -97,20 +83,12 @@ public class Order {
         this.timePlaced = timePlaced;
     }
 
-    public Timestamp getTimePaid() {
-        return timePaid;
+    public String getPaymentMethod() {
+        return paymentMethod;
     }
 
-    public void setTimePaid(Timestamp timePaid) {
-        this.timePaid = timePaid;
-    }
-
-    public Timestamp getTimeDone() {
-        return timeDone;
-    }
-
-    public void setTimeDone(Timestamp timeDone) {
-        this.timeDone = timeDone;
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
     }
 
     public Set<OrderItem> getItems() {
@@ -119,5 +97,18 @@ public class Order {
 
     public void setItems(Set<OrderItem> items) {
         this.items = items;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Order order = (Order) o;
+        return id.equals(order.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
