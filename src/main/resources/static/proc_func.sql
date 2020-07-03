@@ -147,3 +147,60 @@ begin
     select exists(select * from `order_items` where `order_items`.`book` = `book`);
 end//
 delimiter ;
+
+delimiter //
+drop procedure if exists `CalcTopSellers`;
+create procedure `CalcTopSellers`(`n` int, `time_placed_start` varchar(255), `time_placed_end` varchar(255))
+begin
+    select `book`, sum(`amount`) as `total_amount`
+    from `order_items` join `orders` on (`order` = `id`)
+    where `time_placed` between `time_placed_start` and `time_placed_end`
+    group by `book`
+    order by `total_amount` desc
+    limit `n`;
+end//
+delimiter ;
+
+delimiter //
+drop procedure if exists `CalcTopConsumers`;
+create procedure `CalcTopConsumers`(`n` int, `time_placed_start` varchar(255), `time_placed_end` varchar(255))
+begin
+    select `user`, sum(`amount` * `price`) as `total_price`
+    from `order_items` join `orders` on (`order` = `id`)
+    where `time_placed` between `time_placed_start` and `time_placed_end`
+    group by `user`
+    order by `total_price` desc
+    limit `n`;
+end//
+delimiter ;
+
+delimiter //
+drop procedure if exists `CalcMyTotalAmount`;
+create procedure `CalcMyTotalAmount`(`user` int, `time_placed_start` varchar(255), `time_placed_end` varchar(255))
+begin
+    select sum(`amount`)
+    from `order_items` join `orders` on (`order` = `id`)
+    where `orders`.`user` = `user` and `time_placed` between `time_placed_start` and `time_placed_end`;
+end//
+delimiter ;
+
+delimiter //
+drop procedure if exists `CalcMyTotalPrice`;
+create procedure `CalcMyTotalPrice`(`user` int, `time_placed_start` varchar(255), `time_placed_end` varchar(255))
+begin
+    select sum(`amount` * `price`)
+    from `order_items` join `orders` on (`order` = `id`)
+    where `orders`.`user` = `user` and `time_placed` between `time_placed_start` and `time_placed_end`;
+end//
+delimiter ;
+
+delimiter //
+drop procedure if exists `CalcMyItems`;
+create procedure `CalcMyItems`(`user` int, `time_placed_start` varchar(255), `time_placed_end` varchar(255))
+begin
+    select `book`, sum(`amount`) as amount
+    from `order_items` join `orders` on (`order` = `id`)
+    where `orders`.`user` = `user` and `time_placed` between `time_placed_start` and `time_placed_end`
+    group by `book`;
+end//
+delimiter ;

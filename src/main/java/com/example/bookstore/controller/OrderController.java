@@ -1,8 +1,8 @@
 package com.example.bookstore.controller;
 
-import com.example.bookstore.misc.OrderItemsInMyCartDto;
+import com.example.bookstore.dto.OrderItemsInMyCartDto;
 import com.example.bookstore.service.OrderService;
-import com.example.bookstore.util.Message;
+import com.example.bookstore.dto.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

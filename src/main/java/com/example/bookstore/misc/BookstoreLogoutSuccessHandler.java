@@ -1,6 +1,6 @@
 package com.example.bookstore.misc;
 
-import com.example.bookstore.util.Message;
+import com.example.bookstore.dto.Message;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.Authentication;

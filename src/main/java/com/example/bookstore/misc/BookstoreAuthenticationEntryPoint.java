@@ -1,6 +1,6 @@
 package com.example.bookstore.misc;
 
-import com.example.bookstore.util.Message;
+import com.example.bookstore.dto.Message;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.bson.internal.Base64;
 import org.springframework.beans.factory.annotation.Autowired;

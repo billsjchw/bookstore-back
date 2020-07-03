@@ -15,7 +15,7 @@ public class Cart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic
     @Column(name = "`id`")
-    private Long id;
+    private Integer id;
 
     @Basic
     @Column(name = "`user`")
@@ -35,11 +35,11 @@ public class Cart {
         this.items = new HashSet<>();
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

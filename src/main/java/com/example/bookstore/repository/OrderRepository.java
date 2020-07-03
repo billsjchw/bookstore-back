@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Map;
 
 public interface OrderRepository extends JpaRepository<Order, Integer> {
     @Query(value = "call `OrderSearch`(?1, ?2, ?3, ?4)", nativeQuery = true)
@@ -34,4 +35,19 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
 
     @Query(value = "call `BookIsOrdered`(?1)", nativeQuery = true)
     int bookIsOrdered(int bookId);
+
+    @Query(value = "call `CalcTopSellers`(?1, ?2, ?3)", nativeQuery = true)
+    List<Map<String, Object>> calcTopSellers(int n, String timePlacedStart, String timePlacedEnd);
+
+    @Query(value = "call `CalcTopConsumers`(?1, ?2, ?3)", nativeQuery = true)
+    List<Map<String, Object>> calcTopConsumers(int n, String timePlacedStart, String timePlacedEnd);
+
+    @Query(value = "call CalcMyTotalAmount(?1, ?2, ?3)", nativeQuery = true)
+    int calcMyTotalAmount(int userId, String timePlacedStart, String timePlacedEnd);
+
+    @Query(value = "call CalcMyTotalPrice(?1, ?2, ?3)", nativeQuery = true)
+    int calcMyTotalPrice(int userId, String timePlacedStart, String timePlacedEnd);
+
+    @Query(value = "call CalcMyItems(?1, ?2, ?3)", nativeQuery = true)
+    List<Map<String, Object>> calcMyItems(int userId, String timePlacedStart, String timePlacedEnd);
 }
