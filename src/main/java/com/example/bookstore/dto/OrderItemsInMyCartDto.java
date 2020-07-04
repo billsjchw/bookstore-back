@@ -1,4 +1,4 @@
-package com.example.bookstore.misc;
+package com.example.bookstore.dto;
 
 import com.example.bookstore.entity.Consignee;
 

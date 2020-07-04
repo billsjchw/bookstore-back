@@ -1,7 +1,7 @@
 package com.example.bookstore.service;
 
 import com.example.bookstore.entity.User;
-import com.example.bookstore.util.Message;
+import com.example.bookstore.dto.Message;
 
 public interface UserService {
     Message register(User user);

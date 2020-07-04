@@ -6,7 +6,7 @@ import com.example.bookstore.dao.OrderDao;
 import com.example.bookstore.entity.*;
 import com.example.bookstore.misc.BookstoreUserDetails;
 import com.example.bookstore.service.OrderService;
-import com.example.bookstore.util.Message;
+import com.example.bookstore.dto.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.context.SecurityContextHolder;

@@ -7,7 +7,7 @@ import com.example.bookstore.entity.Book;
 import com.example.bookstore.entity.User;
 import com.example.bookstore.misc.BookstoreUserDetails;
 import com.example.bookstore.service.BookService;
-import com.example.bookstore.util.Message;
+import com.example.bookstore.dto.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -81,8 +81,7 @@ public class BookServiceImpl implements BookService {
             return new Message("REJECTED", null);
         if (orderDao.bookIsOrdered(id))
             return new Message("BOOK_IS_ORDERED", null);
-        if (bookDao.existsById(id))
-            bookDao.deleteById(id);
+        bookDao.deleteById(id);
         return new Message("SUCCESS", null);
     }
 }

@@ -2,7 +2,7 @@ package com.example.bookstore.controller;
 
 import com.example.bookstore.entity.User;
 import com.example.bookstore.service.UserService;
-import com.example.bookstore.util.Message;
+import com.example.bookstore.dto.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

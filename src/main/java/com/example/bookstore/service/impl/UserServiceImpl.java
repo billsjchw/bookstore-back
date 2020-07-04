@@ -7,7 +7,7 @@ import com.example.bookstore.entity.Cart;
 import com.example.bookstore.entity.User;
 import com.example.bookstore.misc.BookstoreUserDetails;
 import com.example.bookstore.service.UserService;
-import com.example.bookstore.util.Message;
+import com.example.bookstore.dto.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.security.core.context.SecurityContextHolder;
